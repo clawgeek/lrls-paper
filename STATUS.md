@@ -59,7 +59,7 @@ fig-parts.png             552,474 B
 | **Zenodo** | ✅ **已发布，DOI 10.5281/zenodo.23984055** | 8 文件全量存档，DataCite 可解析，已作为其余渠道的引用锚点 |
 | **ChinaXiv** | ⚠️ 待本人操作 | 中文全文 + `metadata/chinaxiv.md` 表单已回填 Zenodo DOI；需注册 + 实名认证，第三方不得代提交 |
 | **TechRxiv** | ⚠️ 待本人操作 / 通道存疑 | 英文全文 + `metadata/techrxiv.md` 已回填；命令行与真实 Edge 均被 Cloudflare 拦截（403），且 2026-05～07 迁移期社区反馈曾暂停收稿。若通道不可用，以 Zenodo DOI 作为英文引用入口 |
-| **arXiv** | ⚠️ 待本人操作 | LaTeX 源码与非 TeX PDF 两条路径均就绪，`metadata/arxiv.md` 已回填；硬阻塞是 **endorsement**（2026-01-21 起机构邮箱不再单独够用），需同领域作者背书 |
+| **arXiv** | 🟡 已注册、草稿已建，待背书 | 账号 `sangjiexun` 已注册并验证邮箱；投稿草稿 **8335852** 的 Start 页已全部保存（CC BY 4.0、Computer Science / Machine Learning cs.LG）。页面明确提示 "You are not endorsed for this archive"，背书码 **`KDOBWQ`** 已生成并发至 1009900122@qq.com。拿到背书后从 https://arxiv.org/submit/8335852/start 继续即可上传 `arxiv-package.zip` |
 
 ### 为什么另外三个不能由我代提交
 
