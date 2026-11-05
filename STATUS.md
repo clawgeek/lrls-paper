@@ -1,7 +1,19 @@
 # 发布进度实测报告
 
-更新时间：2026-11-06 00:0x GMT+8
+更新时间：2026-11-06 00:5x GMT+8
 执行：Agent mode，工作区 `C:/Users/10099/WorkBuddy/2026-11-04-19-28-06`
+
+---
+
+## ✅ 配图升级为标准科研图（2026-11-06，arXiv 投稿前置）
+
+- 三张配图全部由 **matplotlib** 生成（Times/STIX 衬线字体、Okabe-Ito 色盲安全色板、300 dpi），**无 AI 生成痕迹**，可写入论文与 arXiv：
+  - `paper/assets/fig-framework.png` — 架构/数据流框图（调度器、双池、共享记忆、任务板、奖励结构）
+  - `paper/assets/fig-dynamics.png` — 四档难度运行动力学 2×2 面板（最优分数、覆盖、熵、累计约束违例，对数轴）
+  - `paper/assets/fig-field.png` — 目标场等高线 + 险区 + 智能体足迹/礁隙（基线档）
+- 数据真实性：`tools/run_sims.js` 从 `lrls-sim` 求解器无头运行四档确定性仿真（固定种子），数据落 `tools/sim_data.json`；`tools/make_figures.py` 从该 JSON 出图。四档结果：P1 mild / P2 baseline / P3 high-risk / P4 extreme，REPORT 闭环 tick 191/191/229/415，累计违例 0/4,993/23,027/51,849，首解均 tick 63。
+- 论文同步更新：英文 md/HTML/PDF（11 页，3 图嵌入）、`main.tex`（加 graphicx + 三个 figure 环境）、中文 md/HTML/PDF（摘要 22→12 个智能体勘误、TAU_MUD 0.27→0.38 勘误）。arXiv 投稿包 `paper/arxiv-package.zip`（main.tex + 3 PNG，692 KB）。
+- 英文第 5 节表格已按新数据重写：难度体现在「核验与闭环成本」而非「发现延迟」。
 
 ---
 
