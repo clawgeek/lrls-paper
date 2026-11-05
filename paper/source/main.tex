@@ -1,10 +1,13 @@
 % LRLS-v1.1 — arXiv source package
-% Deliberately conservative: standard article class, no external packages,
-% no figures, no bibtex. Compiles with pdflatex out of the box.
+% Standard article class; graphicx for the three matplotlib figures
+% (fig-framework.png, fig-dynamics.png, fig-field.png — place them in the
+% same directory as main.tex when packaging for arXiv). No bibtex.
+% Compiles with pdflatex out of the box.
 \documentclass[11pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{amsmath,amssymb}
+\usepackage{graphicx}
 \usepackage[margin=1in]{geometry}
 \usepackage{hyperref}
 \hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
@@ -22,7 +25,7 @@ Dual-Agent Exploration--Exploitation under Hard Constraints}
 \maketitle
 
 \begin{abstract}
-\noindent We present LRLS (Lobster RL Specification), a formal specification for constrained optimisation in which the classical exploration--exploitation trade-off is \emph{role-separated} into two heterogeneous agent populations plus a scheduler. A high-entropy \emph{crayfish} population generates coarse candidate habitats (``mud caves''); a low-entropy, constraint-aware \emph{Boston lobster} population promotes candidates into verified feasible solutions (``reef gaps'') via local refinement and constraint projection; a scheduler allocates population budgets, dispatches tasks and triggers global resampling. The specification fixes the state decomposition, six action primitives, a single reward structure $r = r_{\mathrm{obj}} - \lambda_v C_v + \lambda_e \mathcal{H} - \lambda_m C_m$, a shared memory-pool schema, a four-stage training pipeline, seven mandatory reported metrics and a safety layer. We additionally describe v1.1 \emph{RoboZero}, which maps the agents onto a heterogeneous robot fleet with a geometric embedding space, gossip-synchronised memory, multi-robot consensus voting and zero-shot transfer routes. To make the specification executable, we release a dependency-free deterministic reference simulation (single HTML file, 1100 ticks, $22\times22$ reward terrain, 22 agents) and report illustrative single-run behaviour across four difficulty settings. \textbf{This is a specification and a reference implementation, not a claim of algorithmic superiority.} No learned policy, no multi-seed statistics, no baseline comparison and no physical-robot experiment are reported here; Section~6 states these limitations explicitly. The aim is to give the central hypothesis --- that a \emph{learned} switching scheduler outperforms fixed temperature or entropy annealing --- a precise, reproducible target that can subsequently be falsified.
+\noindent We present LRLS (Lobster RL Specification), a formal specification for constrained optimisation in which the classical exploration--exploitation trade-off is \emph{role-separated} into two heterogeneous agent populations plus a scheduler. A high-entropy \emph{crayfish} population generates coarse candidate habitats (``mud caves''); a low-entropy, constraint-aware \emph{Boston lobster} population promotes candidates into verified feasible solutions (``reef gaps'') via local refinement and constraint projection; a scheduler allocates population budgets, dispatches tasks and triggers global resampling. The specification fixes the state decomposition, six action primitives, a single reward structure $r = r_{\mathrm{obj}} - \lambda_v C_v + \lambda_e \mathcal{H} - \lambda_m C_m$, a shared memory-pool schema, a four-stage training pipeline, seven mandatory reported metrics and a safety layer. We additionally describe v1.1 \emph{RoboZero}, which maps the agents onto a heterogeneous robot fleet with a geometric embedding space, gossip-synchronised memory, multi-robot consensus voting and zero-shot transfer routes. To make the specification executable, we release a dependency-free deterministic reference simulation (single HTML file, 1100 ticks, $22\times22$ reward terrain, 12 agents) and report illustrative single-run behaviour across four difficulty settings. \textbf{This is a specification and a reference implementation, not a claim of algorithmic superiority.} No learned policy, no multi-seed statistics, no baseline comparison and no physical-robot experiment are reported here; Section~6 states these limitations explicitly. The aim is to give the central hypothesis --- that a \emph{learned} switching scheduler outperforms fixed temperature or entropy annealing --- a precise, reproducible target that can subsequently be falsified.
 
 \smallskip
 \noindent\textbf{Keywords:} reinforcement learning specification; exploration--exploitation; multi-agent systems; constrained optimisation; heterogeneous robots; zero-shot transfer; crayfish optimisation algorithm
@@ -106,8 +109,8 @@ Parameter & Value & Meaning \\
 \hline
 Ticks & 1100 & pre-computed timeline \\
 Terrain & $22\times22$ & synthetic objective with hard-constraint zones \\
-Agents & 22 & mixed $A_C/A_B$ population \\
-\texttt{TAU\_MUD} & 0.27 & score threshold for a mud cave \\
+Agents & 12 & mixed $A_C/A_B$ population (bounds $8{+}4$) \\
+\texttt{TAU\_MUD} & 0.38 & score threshold for a mud cave \\
 \texttt{VOTE\_NEED} & 2 & consensus votes to promote a reef gap \\
 \texttt{B\_MAX}/\texttt{C\_MAX} & 4/8 & scheduler population bounds \\
 \texttt{LAMBDA\_V}/\texttt{LAMBDA\_M} & 1.0/0.15 & violation and migration weights \\
@@ -115,25 +118,46 @@ Agents & 22 & mixed $A_C/A_B$ population \\
 \end{tabular}
 \end{center}
 
-The pipeline is \texttt{MAP} $\to$ \texttt{DISCOVER} $\to$ \texttt{VERIFY} $\to$ \texttt{REFINE} $\to$ \texttt{REPORT}. Three details determine whether a solution is ever found: (i) \texttt{DigLocal} performs a risk-gradient repulsion step before accepting a candidate; (ii) \texttt{VigilScan} applies bounded constraint projection (at most three gradient steps) and permits re-inspection so consensus is not permanently blocked; (iii) explorers do \textbf{not} pre-filter by risk --- over-filtering at discovery caused an earlier degenerate build with $\mathrm{best}=0.000$ and \texttt{REPORT} never closed. Stalled improvement triggers resampling. Reproducibility: seeded deterministic PRNG, URL state parameters, keyboard single-step and a scrub bar.
+The pipeline is \texttt{MAP} $\to$ \texttt{DISCOVER} $\to$ \texttt{VERIFY} $\to$ \texttt{REFINE} $\to$ \texttt{REPORT}. Three details determine whether a solution is ever found: (i) \texttt{DigLocal} performs a risk-gradient repulsion step before accepting a candidate; (ii) \texttt{VigilScan} applies bounded constraint projection (at most three gradient steps) and permits re-inspection so consensus is not permanently blocked; (iii) explorers do \textbf{not} pre-filter by risk --- over-filtering at discovery caused an earlier degenerate build with $\mathrm{best}=0.000$ and \texttt{REPORT} never closed. Stalled improvement triggers resampling. Reproducibility: seeded deterministic PRNG, URL state parameters, keyboard single-step and a scrub bar. Figure~\ref{fig:framework} summarises the roles, data flow and reward structure; the figure scripts are released with the preprint.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{fig-framework.png}
+\caption{LRLS data flow. The explorer pool $A_C$ writes candidate habitats (mud caves) into the shared memory pool $M$; the scheduler $A_S$ allocates population budgets and assigns pending caves to the refiner pool $A_B$, which returns verified reef gaps after local refinement, constraint projection and consensus voting. The reward combines the objective increment, a violation cost, an exploration-entropy bonus and a migration cost.}
+\label{fig:framework}
+\end{figure}
 
 \section{Illustrative Results}
-Four parameter settings were run through the same deterministic solver. These are \textbf{single-run illustrations of solver behaviour, not a statistical evaluation}; no learned policy is involved and no baseline is compared.
+Four operating profiles (parameter tuples of the same deterministic solver, fixed seed) were run end-to-end. These are \textbf{single-run illustrations of solver behaviour, not a statistical evaluation}; no learned policy is involved and no baseline is compared.
 
 \begin{center}
 \begin{tabular}{lcccccc}
 \hline
-Setting & Best & Reefs & Aband. & Viol. & First & REPORT \\
+Setting & $\lambda_e$/risk/complexity/stress & Best & Reefs & Viol. & First & REPORT \\
 \hline
-Easy & 0.998 & 16 & 0 & 0 & 63 & closed \\
-Default & 1.000 & 16 & 0 & 5 & 63 & closed \\
-High risk & 1.000 & 11 & 5 & 22 & 63 & closed \\
-Extreme & 1.000 & 15 & 1 & 50 & 79 & closed \\
+P1 mild & 0.35/0.25/0.20/0 & 0.998 & 16 & 0 & 63 & 191 \\
+P2 baseline & 0.35/0.55/0.50/0 & 1.000 & 16 & 4{,}993 & 63 & 191 \\
+P3 high-risk & 0.30/0.68/0.62/0.30 & 0.991 & 17 & 23{,}027 & 63 & 229 \\
+P4 extreme & 0.15/0.90/0.85/0.90 & 0.999 & 14 & 51{,}849 & 63 & 415 \\
 \hline
 \end{tabular}
 \end{center}
 
-Two observations are legitimate at this evidence level: (a) the pipeline closes in all four settings, i.e.\ the specification is internally executable; (b) harder constraints produce more violations, more abandonments and a later first feasible solution, so the difficulty sliders are not cosmetic. \textbf{No claim of improvement over COA, fixed-temperature annealing, PPO, MAPPO or any other baseline is made.} The objective surface is synthetic and normalised, so ``1.000'' means the solver's own known optimum was found, not a benchmark score.
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{fig-dynamics.png}
+\caption{Single-run dynamics across the four operating profiles. (a) Best feasible score normalised by the run's known optimum $f^\ast$; (b) explored map coverage; (c) normalised explorer entropy $\mathcal{H}$; (d) cumulative constraint-violation events (log scale). All four runs close the \texttt{REPORT} stage; harder profiles close later and accumulate more violation events.}
+\label{fig:dynamics}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{fig-field.png}
+\caption{Baseline run (P2) at $t=1100$. (a) Synthetic objective field $f(x,z)$ with hard-constraint hazard zones (hatched); the star marks the run's global optimum $f^\ast$, circles mark sub-optima and decoys. (b) Agent footprint: explorer samples (light dots) cover the domain; refiner samples concentrate on candidate habitats; green squares are consensus-verified reef gaps.}
+\label{fig:field}
+\end{figure}
+
+Two observations are legitimate at this evidence level: (a) the pipeline closes in all four settings, i.e.\ the specification is internally executable (Fig.~\ref{fig:dynamics}); (b) difficulty is not cosmetic --- moving from P1 to P4 multiplies the cumulative violation-event count from 0 to 51{,}849 and delays \texttt{REPORT} closure from tick 191 to 415, while the first feasible solution appears at the same tick (63) because the explorer's initial sweep is largely insensitive to the risk scaling (Fig.~\ref{fig:field}). Difficulty therefore manifests in \textbf{verification and closure cost}, not in discovery latency. \textbf{No claim of improvement over COA, fixed-temperature annealing, PPO, MAPPO or any other baseline is made.} The objective surface is synthetic and normalised, so ``1.000'' means the solver's own known optimum was found, not a benchmark score.
 
 \section{Limitations}
 \begin{enumerate}
@@ -150,7 +174,7 @@ Two observations are legitimate at this evidence level: (a) the pipeline closes 
 \section{Conclusion and Future Work}
 LRLS-v1.1 turns an exploration--exploitation narrative into a specification with a fixed state schema, action vocabulary, reward structure, memory contract, training order, safety rules and metric set, and pairs it with a deterministic, inspectable reference simulation. Its value at this stage is a \textbf{falsifiable target and a shared implementation contract}, not a result. Ordered next steps: (1) align related work with COA, options/HRL, CTDE and domain randomisation; (2) build a minimal Gymnasium-compatible constrained 2D benchmark; (3) run at least five seeds with mean $\pm$ standard deviation, ablation tables, the heuristic fallback as a separate ablation, and learned scheduling versus fixed temperature and entropy annealing; (4) only then prepare a conference submission. The correct sequence is \emph{specification $\to$ code $\to$ experiments $\to$ venue}.
 
-\paragraph{Data, code and license.} Reference simulator \texttt{assets/lrls-sim.html} is distributed with this preprint. Companion aphorism text: \url{https://github.com/clawgeek/openclaw-zen}. Proposal and maintainer response: \url{https://github.com/openclaw/openclaw/issues/192772}. Text CC~BY~4.0; code MIT. The mascot banner artwork is excluded.
+\paragraph{Data, code and license.} Reference simulator \texttt{assets/lrls-sim.html} is distributed with this preprint. Figures~\ref{fig:framework}--\ref{fig:field} are generated by \texttt{tools/make\_figures.py} (matplotlib) from solver data dumped by \texttt{tools/run\_sims.js}; no AI-generated imagery is used. Companion aphorism text: \url{https://github.com/clawgeek/openclaw-zen}. Proposal and maintainer response: \url{https://github.com/openclaw/openclaw/issues/192772}. Text CC~BY~4.0; code MIT. The mascot banner artwork is excluded.
 
 \paragraph{Origin and scope.} This preprint consolidates material generated in a ten-round dialogue dated 5 November 2026 (English translation of the title: ``Lobster Dual-Agent Reinforcement Learning Specification''), which produced a classical-Chinese exegesis, a dual-agent architecture, the LRLS-v1.0 specification, the v1.1 RoboZero extension, and two conference-style English drafts (ICRA and CoRL). Those drafts contained qualitative performance assertions without data. This document rewrites the material as a specification, removes unsupported claims and invalid references, and adds a runnable reference implementation. It is positioned as a \textbf{preprint of a specification}, not as a conference paper.
 
