@@ -37,7 +37,7 @@ Computer Science / Artificial Intelligence / Robotics and Control Systems（或 
 
 ## Comments / Notes 栏
 
-Preprint v1.0. This is a specification and reference implementation, not a claim of algorithmic superiority; limitations are listed in Section 6. Companion repository: https://github.com/clawgeek/openclaw-zen . No prior publication; not currently under peer review at any IEEE venue. IEEE explicitly treats preprint posting as not prior publication (see e.g. ICASSP 2026 preprint policy).
+Preprint v1.0. This is a specification and reference implementation, not a claim of algorithmic superiority; limitations are listed in Section 6. The full deposit (English/Chinese text, LaTeX source, reference simulation) is archived on Zenodo under DOI 10.5281/zenodo.23984055 (https://doi.org/10.5281/zenodo.23984055), CC BY 4.0, deposited 2026-11-05; this posting is the same work and is not a duplicate publication. Companion repository: https://github.com/clawgeek/openclaw-zen . No prior journal or conference publication; not currently under peer review at any IEEE venue. IEEE explicitly treats preprint posting as not prior publication (see e.g. ICASSP 2026 preprint policy).
 
 ## 预期产出
 
@@ -51,5 +51,5 @@ IEEE 明确预印本不构成 prior publication，后续投 ICRA / IROS / RA-L �
 ## 若投稿通道关闭的替代方案
 
 1. 等 TechRxiv 恢复后重投（材料已备好，无需改稿）。
-2. 先用 **Zenodo** 拿到 DataCite DOI 固化时间戳（本包已提供一键脚本），功能等价且更稳。
+2. **Zenodo 已完成**（2026-11-05）：DOI `10.5281/zenodo.23984055`，8 个文件、1.96 MB 全量存档，DataCite 元数据已可解析 → https://doi.org/10.5281/zenodo.23984055 。若 TechRxiv 长期不可用，以该 DOI 作为英文预印本的正式引用入口。
 3. 中文场景可用 **ChinaXiv**（本包含中文全文），英文场景可用 **arXiv**（需背书）。
