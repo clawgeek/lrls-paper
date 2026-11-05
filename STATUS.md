@@ -1,7 +1,57 @@
 # 发布进度实测报告
 
-时间：2026-11-05 22:2x–22:4x GMT+8
+更新时间：2026-11-06 00:0x GMT+8
 执行：Agent mode，工作区 `C:/Users/10099/WorkBuddy/2026-11-04-19-28-06`
+
+---
+
+## ✅ Zenodo 已正式发布（第一个真实 DOI）
+
+| 项 | 值 |
+|---|---|
+| **版本 DOI** | `10.5281/zenodo.23984055` |
+| **概念 DOI** | `10.5281/zenodo.23984054`（指向最新版，跨版本不变） |
+| 记录页 | https://zenodo.org/record/23984055 |
+| 规范引用 | https://doi.org/10.5281/zenodo.23984055 |
+| deposition id | 23984055 |
+| 状态 | `submitted / done`（deposit API 返回 http 202，DataCite 元数据已可解析） |
+| 许可 | CC BY 4.0（正文），参考实现 MIT |
+| 文件 | 8 个，1.96 MB，英文 PDF 排首位 |
+| 发布时刻 | 2026-11-05 |
+
+DataCite 侧已核对：`https://api.datacite.org/dois/10.5281/zenodo.23984055` 返回完整元数据，作者 `Sang, Jason`、publicationYear 2026、publisher Zenodo、标题一致。
+
+### 上传的 8 个文件（已整理为扁平命名）
+
+```
+lrls-v1.1-en.pdf          397,655 B   英文主稿 9 页
+lrls-v1.1-zh.pdf          474,215 B   中文主稿 8 页
+lrls-v1.1-en.md            23,360 B
+lrls-v1.1-zh.md            17,983 B
+lrls-v1.1-source.tex       20,743 B   arXiv 可编译源码
+lrls-sim.html              49,475 B   单文件离线仿真
+fig-simulation.png        516,905 B
+fig-parts.png             552,474 B
+```
+
+元数据：title / description(1064 字符) / publication_date 2026-11-05 / creators 1 / keywords 10 / upload_type=publication(preprint) / access_right=open / license cc-by-4.0 / related_identifiers 指向 `clawgeek/openclaw-zen` 与 OpenClaw issue #192772。
+
+发布路径：用户完成 Zenodo 的 GitHub OAuth 授权并提供 Personal Access Token（scope: `deposition actions` + `deposit:write`）→ `tools/publish_zenodo.py --live` 建草稿并上传 → 手工整理文件名与顺序 → `POST /actions/publish`。**Token 仅用于本次发布，未写入任何文件、日志、脚本或记忆；发布后应立即在 Zenodo → Applications 撤销。**
+
+---
+
+## 四渠道最终状态
+
+| 渠道 | 状态 | 说明 |
+|---|---|---|
+| **Zenodo** | ✅ **已发布，DOI 10.5281/zenodo.23984055** | 8 文件全量存档，DataCite 可解析，已作为其余渠道的引用锚点 |
+| **ChinaXiv** | ⚠️ 待本人操作 | 中文全文 + `metadata/chinaxiv.md` 表单已回填 Zenodo DOI；需注册 + 实名认证，第三方不得代提交 |
+| **TechRxiv** | ⚠️ 待本人操作 / 通道存疑 | 英文全文 + `metadata/techrxiv.md` 已回填；命令行与真实 Edge 均被 Cloudflare 拦截（403），且 2026-05～07 迁移期社区反馈曾暂停收稿。若通道不可用，以 Zenodo DOI 作为英文引用入口 |
+| **arXiv** | ⚠️ 待本人操作 | LaTeX 源码与非 TeX PDF 两条路径均就绪，`metadata/arxiv.md` 已回填；硬阻塞是 **endorsement**（2026-01-21 起机构邮箱不再单独够用），需同领域作者背书 |
+
+### 为什么另外三个不能由我代提交
+
+三者都要求作者本人的学术身份动作：ChinaXiv 实名认证、arXiv 同行背书、TechRxiv 的 IEEE 账号与反爬挑战。这些在学术伦理与平台条款上都不适合由第三方代做，本环境也确实无法绕过。我能做的可预置工作（稿件、元数据、表单、源码校验、互链回填）已全部完成，**只需登录 + 粘贴 + 上传**。
 
 ---
 
@@ -9,60 +59,32 @@
 
 | # | 动作 | 结果 |
 |---|---|---|
-| 1 | 把十轮对话草稿重写为正式预印本 | 英文 9 页 / 中文 8 页，含修正后的 COA 引用、Limitations、四档说明性结果 |
-| 2 | 生成中英 PDF | `paper/lrls-v1.1-en.pdf` (397 KB)、`paper/lrls-v1.1-zh.pdf` (474 KB)，Edge 打印，字体嵌入、无 JS |
-| 3 | arXiv LaTeX 源码 | `paper/source/main.tex`，20.7 KB，CJK 0 字符、花括号平衡、12 条内嵌参考文献 |
-| 4 | 四渠道表单内容 + Zenodo 元数据 | `metadata/*.md` / `zenodo.json` |
-| 5 | Zenodo 一键发布脚本 | `tools/publish_zenodo.py`，`--dry-run` 已通过（8 文件 / 1.96 MB 全部存在） |
-| 6 | **GitHub 公开存档 + 优先权时间戳** | 新建 `clawgeek/lrls-paper`，17 个文件、单 commit `221f2ffc`、tag `v1.0`、Release 已创建 |
+| 1 | 把十轮对话草稿重写为正式预印本 | 英文 9 页 / 中文 8 页，修正 COA 引用、CoRL/CCF 错误、zero-shot 语义，补 8 条 Limitations |
+| 2 | 生成中英 PDF | Edge print-to-pdf，字体嵌入、无 JS、公式与作者行已核对 |
+| 3 | arXiv LaTeX 源码 | `paper/source/main.tex`，CJK 0、花括号平衡、12 条内嵌参考文献 |
+| 4 | 四渠道表单 + Zenodo 元数据 | `metadata/` 全部就绪，现已回填 Zenodo DOI |
+| 5 | Zenodo 一键脚本 | `tools/publish_zenodo.py`，`--dry-run` / 草稿 / `--publish` 三级安全档 |
+| 6 | GitHub 公开存档 | `clawgeek/lrls-paper`，tag `v1.0` + Release |
+| 7 | **Zenodo 正式发布** | **DOI 10.5281/zenodo.23984055**，DataCite 已注册 |
+| 8 | 四渠道互链回填 | chinaxiv / techrxiv / arxiv 三个表单全部标注该 DOI |
 
 公开地址：
+- Zenodo：https://doi.org/10.5281/zenodo.23984055
 - 仓库：https://github.com/clawgeek/lrls-paper
 - Release：https://github.com/clawgeek/lrls-paper/releases/tag/v1.0
-
-> 这一步是四渠道之外的**兜底**：commit 与 release 已经构成公开、可验证的时间戳，Zenodo 开启 GitHub 集成后打 tag 可自动存档。
-
----
-
-## 四个渠道：实测状态与阻塞点
-
-| 渠道 | 命令行连通性 | 真实 Edge 登录态 | 阻塞原因 | 自动化可能 |
-|---|---|---|---|---|
-| **Zenodo** | `/api/deposit/depositions` → 403（需 token） | 未登录（页面显示 Log in / Sign up） | 缺账号 / token | ✅ 有 token 可全自动；或 GitHub OAuth 授权后由浏览器代填 |
-| **ChinaXiv** | 302 → `www.chinaxiv.org`，首页正常 | 未登录（首页显示「登录」） | 需注册 + **实名认证** | ❌ 实名必须本人 |
-| **TechRxiv** | 403（Cloudflare 挑战） | **真实浏览器亦被 Cloudflare 拦**（页面显示"请稍候…" / 刷新此页面 / 故障排除） | 反爬拦截，且社区反馈 2026-05～07 迁移期曾暂停收稿 | ❌ 本环境不可达 |
-| **arXiv** | 200 | 跳转 `/login?next_page=/user/`，未登录 | 需账号 + **首次投稿 endorsement** + 2026 新规 | ❌ 背书必须本人/同行 |
-
-**结论**：四个平台都要求作者本人账号，其中 ChinaXiv 需实名、arXiv 需同行背书、TechRxiv 本环境网络不可达。这些不是我能用脚本绕过的步骤，也不是应该由第三方代做的学术身份动作。因此**我没有代提交任何稿件，也没有声称获得任何 DOI**。
-
-### Zenodo 已经推进到的位置
-
-已在用户 Edge 中打开 GitHub OAuth 授权页（tab 13）：
-
-```
-https://github.com/login/oauth/authorize?...client_id=c04ff9cf27ed8474bc1c
-scope = read:user, user:email, admin:repo_hook, read:org
-```
-
-该 scope 含 `admin:repo_hook`（允许 Zenodo 在 GitHub 仓库上装 webhook），属敏感授权，**应由用户本人点击 Authorize**。授权成功后 Zenodo 即登录，后续建 deposition、上传 8 个文件、填元数据、发布都可由脚本或浏览器自动完成。
 
 ---
 
 ## 用户下一步（最小动作）
 
-1. **Zenodo**：二选一
-   - 在已打开的授权页点 **Authorize**，然后告我一声 → 我继续建草稿并发布；
-   - 或到 https://zenodo.org/account/settings/applications/tokens/new/ 生成 token 发我 → 我跑 `publish_zenodo.py --live --publish`。
-2. **ChinaXiv**：注册 + 实名 → 按 `metadata/chinaxiv.md` 粘贴 → 传 `lrls-v1.1-zh.pdf`。
-3. **arXiv**：注册 + 找 `cs.LG` 背书人 → 上传 `paper/source/main.tex`（或单独传英文 PDF，二选一勿混）。
-4. **TechRxiv**：换网络/设备试 https://www.techrxiv.org/ ；若仍被拦或投稿暂停，用 Zenodo DOI 占位即可，材料无需改。
-
-拿到任一 DOI / 编号后回填 `metadata/zenodo.json` 的 `related_identifiers` 与 `metadata/arxiv.md`，形成四渠道互链。
-
----
+1. **立即撤销 Zenodo token**：https://zenodo.org/account/settings/applications/ → 删除本次创建的 `lrls-preprint-upload` / `lrls-deposit-temp`。凭据曾出现在对话中，务必撤销。
+2. **ChinaXiv**：注册 + 实名 → 按 `metadata/chinaxiv.md` 粘贴 → 传 `paper/lrls-v1.1-zh.pdf`。
+3. **TechRxiv**：换网络/设备试 https://www.techrxiv.org/ ；若仍被拦，用 Zenodo DOI 占位即可。
+4. **arXiv**：注册 + 找 `cs.LG` 背书人 → 上传 `paper/source/main.tex`（或单独传英文 PDF，二选一勿混）。
+5. 拿到任一新编号后告诉我，我发 Zenodo **新版本**（概念 DOI 不变）把四个编号互相指向，形成完整引用闭环。
 
 ## 未做且不冒充已做
 
-- 未在任何平台创建 deposition、未取得任何 DOI / arXiv ID / ChinaXiv 编号。
-- 未做同行评审、未投会议（AAMAS Blue Sky / RSS / ICRA Arts in Robotics 等仍按 `LRLS-论文投稿渠道清单.md` 的时间窗口另行决定）。
-- 未代用户点击任何 OAuth 授权、未代填实名信息。
+- 未在 ChinaXiv / TechRxiv / arXiv 创建任何 deposition，未取得这三个平台的任何编号。
+- 未做同行评审、未投会议（AAMAS Blue Sky / RSS / ICRA Arts in Robotics 的时间窗口另见 `LRLS-论文投稿渠道清单.md`）。
+- 未代用户点击实名认证或填写背书人信息。
