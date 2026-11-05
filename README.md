@@ -12,14 +12,16 @@
 
 ## 四渠道状态一览
 
-| 渠道 | 产出 | 自动化程度 | 当前状态 |
+| 渠道 | 产出 | 自动化程度 | 实测状态（2026-11-05） |
 |---|---|---|---|
-| **Zenodo** | DataCite 概念 DOI + 版本 DOI，1.96 MB 全量存档 | ✅ 脚本全自动（需 Personal Access Token） | 材料与脚本已就绪，等 token |
-| **ChinaXiv** | `10.12074/…` DOI + CSTR + 科创链 TXID 时间戳 | ⚠️ 网页表单（需实名账号） | 中文全文与表单内容已就绪 |
-| **TechRxiv** | IEEE 预印本 DOI，与 ICRA/IROS/RA-L 兼容 | ⚠️ 网页表单（需 IEEE 账号；本环境被 Cloudflare 拦） | 英文全文与表单内容已就绪 |
-| **arXiv** | `arXiv:2611.xxxxx`，cs.LG + cs.RO/cs.MA | ⚠️ 网页表单（需账号 + 首次投稿背书） | LaTeX 源码与非 TeX PDF 两条路径均已就绪 |
+| **Zenodo** | DataCite 概念 DOI + 版本 DOI，1.96 MB 全量存档 | ✅ 脚本全自动（需 Personal Access Token） | 材料与脚本已就绪；未登录，GitHub OAuth 授权页已打开待本人确认 |
+| **ChinaXiv** | `10.12074/…` DOI + CSTR + 科创链 TXID 时间戳 | ⚠️ 网页表单（需实名账号） | 中文全文与表单内容已就绪；未登录，需注册+实名 |
+| **TechRxiv** | IEEE 预印本 DOI，与 ICRA/IROS/RA-L 兼容 | ⚠️ 网页表单（需 IEEE 账号） | 英文全文与表单内容已就绪；**真实浏览器亦被 Cloudflare 拦**，本环境不可达 |
+| **arXiv** | `arXiv:2611.xxxxx`，cs.LG + cs.RO/cs.MA | ⚠️ 网页表单（需账号 + 首次投稿背书） | LaTeX 源码与非 TeX PDF 两条路径均已就绪；未登录，需 endorsement |
 
-**为什么需要你本人操作**：四个平台都要求注册账号，ChinaXiv 需实名认证、arXiv 需同领域作者背书，这些在学术伦理与平台条款上都不能由第三方代提交。本包把所有可预置的材料与元数据做完，你只需登录 + 粘贴 + 上传。
+**为什么需要你本人操作**：四个平台都要求注册账号，ChinaXiv 需实名认证、arXiv 需同领域作者背书，这些在学术伦理与平台条款上都不能由第三方代提交。本包把所有可预置的材料与元数据做完，你只需登录 + 粘贴 + 上传。详细的连通性与登录态实测见 `STATUS.md`。
+
+> **诚实声明**：截至本次执行结束，**尚未在任何平台取得 DOI 或 arXiv 编号**。已真实落地的公开记录是本仓库的 commit / `v1.0` tag / Release。
 
 ---
 

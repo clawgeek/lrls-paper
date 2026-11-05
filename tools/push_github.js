@@ -77,7 +77,11 @@ function main() {
   gh('PATCH', `repos/${REPO}/git/refs/heads/main`, { sha: commit.sha, force: false });
   console.log('commit:', commit.sha.slice(0, 8));
 
-  // tag + release on this commit
+  // tag + release on this commit (skip on follow-up pushes with --no-release)
+  if (process.argv.includes('--no-release')) {
+    console.log('--no-release: tag/release step skipped');
+    return;
+  }
   try {
     gh('POST', `repos/${REPO}/git/refs`, { ref: 'refs/tags/v1.0', sha: commit.sha });
     console.log('tag v1.0 created');
