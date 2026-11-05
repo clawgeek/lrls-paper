@@ -1,0 +1,43 @@
+{
+  "_comment": "Zenodo deposition metadata (legacy deposit API + InvenioRDM-compatible fields). Used by tools/publish_zenodo.py",
+  "title": "LRLS-v1.1: A Specification and Reference Simulation for Dual-Agent Exploration–Exploitation under Hard Constraints",
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "publication_date": "2026-11-05",
+  "description": "LRLS (Lobster RL Specification) is a formal specification for constrained optimisation in which the exploration–exploitation trade-off is role-separated into a high-entropy crayfish explorer population, a constraint-aware Boston lobster refiner population, and a scheduler. It fixes the state decomposition, six action primitives, the reward r = r_obj - lambda_v*C_v + lambda_e*H - lambda_m*C_m, a shared memory-pool schema, a four-stage training pipeline, seven mandatory metrics and a safety layer. v1.1 RoboZero extends it to heterogeneous robot fleets with geometric embeddings, gossip memory and consensus voting. This deposit also contains a dependency-free deterministic reference simulation (single HTML, 1100 ticks, 22x22 terrain, 22 agents) with illustrative single-run results over four difficulty settings. This is a specification and reference implementation, NOT a claim of algorithmic superiority: no learned policy, no multi-seed statistics, no baseline comparison and no physical-robot experiment are reported. Limitations are stated in Section 6.",
+  "creators": [
+    {"name": "Sang, Jason", "affiliation": "Independent Researcher", "orcid": ""}
+  ],
+  "access_right": "open",
+  "license": "cc-by-4.0",
+  "language": "eng",
+  "keywords": [
+    "reinforcement learning",
+    "exploration-exploitation",
+    "multi-agent systems",
+    "constrained optimisation",
+    "crayfish optimization algorithm",
+    "heterogeneous robots",
+    "zero-shot transfer",
+    "specification",
+    "reference simulation",
+    "OpenClaw"
+  ],
+  "notes": "Preprint v1.0. Text CC BY 4.0; reference implementation MIT. Companion repository: https://github.com/clawgeek/openclaw-zen ; upstream proposal: https://github.com/openclaw/openclaw/issues/192772",
+  "related_identifiers": [
+    {"identifier": "https://github.com/clawgeek/openclaw-zen", "relation": "isSupplementTo", "resource_type": "software"},
+    {"identifier": "https://github.com/openclaw/openclaw/issues/192772", "relation": "isDocumentedBy", "resource_type": "other"}
+  ],
+  "communities": [],
+  "version": "1.0",
+  "files": [
+    "paper/lrls-v1.1-en.pdf",
+    "paper/lrls-v1.1-zh.pdf",
+    "paper/lrls-v1.1-en.md",
+    "paper/lrls-v1.1-zh.md",
+    "paper/assets/lrls-sim.html",
+    "paper/assets/fig-simulation.png",
+    "paper/assets/fig-parts.png",
+    "paper/source/main.tex"
+  ]
+}

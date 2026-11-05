@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LRLS 双体龙虾仿真 · Lobster Dual-Agent Simulator</title>
+<style>
+:root{
+  --bg:#F7F6F2; --paper:#FFFFFF; --ink:#2C2C2A; --muted:#6B6A65; --hint:#9A988F;
+  --line:#E4E1D8; --line2:#D3D0C5;
+  --cray:#E2703A; --cray-d:#8A3D17; --cray-l:#FCEDE3;
+  --bost:#A32D2D; --bost-d:#6E1B1B; --bost-l:#F9EAEA;
+  --sched:#185FA5; --sched-l:#E8F1FA;
+  --amber:#BA7517; --green:#3B6D11;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:13px;overflow:hidden}
+button,input{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer;background:var(--paper);border:1px solid var(--line2);border-radius:7px;padding:6px 10px;transition:background .12s,border-color .12s,transform .08s}
+button:hover{border-color:var(--ink);background:#FFFDF8}
+button:active{transform:translateY(1px)}
+button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+button.tiny{padding:4px 8px;font-size:11px}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.dim{color:var(--muted)}
+#app{height:100%;display:flex;flex-direction:column}
+header{display:flex;align-items:flex-start;gap:22px;padding:12px 18px 10px;border-bottom:1px solid var(--line);background:var(--paper);flex:0 0 auto}
+#brand{min-width:250px}
+#brand h1{font-size:15px;font-weight:500;letter-spacing:.02em}
+#brand .sub{font-size:11px;color:var(--muted);margin-top:3px}
+#brand .en{font-family:var(--mono);font-size:10px;color:var(--hint);margin-top:2px;letter-spacing:.04em}
+#bigWrap{display:flex;align-items:baseline;gap:10px;padding-left:20px;border-left:1px solid var(--line)}
+#bigNum{font-family:var(--mono);font-size:34px;font-weight:500;line-height:1;letter-spacing:-.02em}
+#bigLabel{font-size:11px;color:var(--muted)}
+#headRight{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:7px}
+#statusText{font-size:11px;color:var(--muted);font-family:var(--mono);max-width:430px;text-align:right;line-height:1.35}
+.viewRow{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+#main{flex:1 1 auto;display:grid;grid-template-columns:minmax(0,1fr) 340px;min-height:0}
+#stage{position:relative;min-width:0;background:radial-gradient(circle at 50% 38%,#FFFFFF 0%,#F2F0E9 72%,#ECE9E0 100%);overflow:hidden}
+#scene{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+#scene:active{cursor:grabbing}
+#partBar{position:absolute;top:12px;left:14px;display:flex;gap:5px;flex-wrap:wrap;max-width:74%}
+#viewBar{position:absolute;top:12px;right:14px;display:flex;gap:5px}
+#stageHint{position:absolute;left:14px;bottom:12px;font-size:11px;color:var(--hint);font-family:var(--mono);pointer-events:none}
+#legend{position:absolute;right:14px;bottom:12px;display:flex;gap:12px;font-size:10px;color:var(--muted);background:rgba(255,255,255,.82);padding:6px 9px;border:1px solid var(--line);border-radius:7px}
+#legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:-1px}
+#tip{position:absolute;pointer-events:none;background:var(--ink);color:#fff;font-size:11px;padding:6px 9px;border-radius:6px;opacity:0;transition:opacity .1s;white-space:nowrap;z-index:8}
+aside{border-left:1px solid var(--line);background:var(--paper);overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:9px;scrollbar-width:thin}
+section{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:9px;flex:0 0 auto}
+section h2{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.08em;margin-bottom:7px;display:flex;justify-content:space-between}
+section h2 span{font-family:var(--mono);font-weight:400;color:var(--hint);letter-spacing:0}
+#metricGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.metric{background:#FBFAF6;border:1px solid var(--line);border-radius:7px;padding:6px 5px;min-width:0}
+.metric .k{font-size:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.metric .v{font-family:var(--mono);font-size:13px;margin-top:2px}
+.chartBox{margin-bottom:5px}
+.chartBox .lab{font-size:10px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:2px}
+canvas.chart{display:block;width:100%;height:44px;background:#FBFAF6;border:1px solid var(--line);border-radius:6px}
+#minimap{display:block;width:100%;height:100px;background:#FBFAF6;border:1px solid var(--line);border-radius:6px}
+#taskList{display:flex;flex-direction:column;gap:3px;max-height:118px;overflow-y:auto}
+.task{display:flex;align-items:center;gap:6px;font-size:10.5px;padding:3px 6px;border-radius:5px;background:#FBFAF6;border:1px solid var(--line)}
+.task .dot{width:6px;height:6px;border-radius:50%;flex:0 0 auto;background:var(--line2)}
+.task.pending .dot{background:var(--line2)}
+.task.active .dot{background:var(--amber)}
+.task.done .dot{background:var(--green)}
+.task .tid{font-family:var(--mono);color:var(--hint);font-size:10px;min-width:34px}
+.task .who{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--muted)}
+#eventLog{height:96px;overflow-y:auto;font-family:var(--mono);font-size:10px;line-height:1.6;color:var(--muted)}
+#eventLog div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#eventLog b{color:var(--ink);font-weight:500}
+#eventLog .c{color:var(--cray-d)}#eventLog .b{color:var(--bost-d)}#eventLog .s{color:var(--sched)}
+footer{flex:0 0 auto;border-top:1px solid var(--line);background:var(--paper);padding:9px 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.ctlGroup{display:flex;align-items:center;gap:6px}
+.ctlGroup label{font-size:10px;color:var(--muted);white-space:nowrap}
+input[type=range]{width:96px;accent-color:var(--ink)}
+#timeline{flex:1 1 180px;min-width:130px;accent-color:var(--cray)}
+#timeLabel{font-family:var(--mono);font-size:11px;min-width:74px;text-align:right}
+#formula{font-family:var(--mono);font-size:10px;color:var(--hint);margin-left:auto;white-space:nowrap}
+#tourCursor{position:absolute;width:16px;height:16px;border:2px solid var(--ink);border-radius:50%;background:rgba(255,255,255,.6);pointer-events:none;opacity:0;transition:left .55s cubic-bezier(.4,0,.2,1),top .55s cubic-bezier(.4,0,.2,1),opacity .3s;z-index:20}
+#tourCursor:after{content:"";position:absolute;left:12px;top:12px;width:0;height:0;border-left:9px solid var(--ink);border-top:5px solid transparent;border-bottom:5px solid transparent;transform:rotate(-20deg)}
+body.nopanels #main{grid-template-columns:minmax(0,1fr)}
+body.nopanels aside{display:none}
+@media(max-width:1000px){#main{grid-template-columns:minmax(0,1fr)}aside{display:none}#formula{display:none}#brand{min-width:0}}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div id="brand">
+      <h1>龙虾双体智能体 · 强化学习仿真</h1>
+      <div class="sub">小龙虾「用心嬉也」 × 波士顿龙虾「用心惕也」</div>
+      <div class="en">LRLS-v1.1 RoboZero · TEARDOWN-STYLE SIMULATOR</div>
+    </div>
+    <div id="bigWrap"><div id="bigNum">0.00</div><div id="bigLabel">最优可行解<br>Best feasible score</div></div>
+    <div id="headRight">
+      <div id="statusText">booting…</div>
+      <div class="viewRow" id="viewBar2"></div>
+    </div>
+  </header>
+  <div id="main">
+    <div id="stage">
+      <canvas id="scene"></canvas>
+      <div id="partBar"></div>
+      <div id="viewBar"></div>
+      <div id="stageHint">drag to orbit · scroll to zoom · space play/pause · H hide panels</div>
+      <div id="legend">
+        <span><i style="background:#E2703A"></i>小龙虾 C</span>
+        <span><i style="background:#A32D2D"></i>波龙 B</span>
+        <span><i style="background:#BA7517"></i>淤泥窟</span>
+        <span><i style="background:#3B6D11"></i>岩礁隙</span>
+      </div>
+      <div id="tip"></div>
+      <div id="tourCursor"></div>
+    </div>
+    <aside>
+      <section>
+        <h2>实时指标 <span>all from solver</span></h2>
+        <div id="metricGrid"></div>
+      </section>
+      <section>
+        <h2>动态曲线 <span>live charts</span></h2>
+        <div class="chartBox"><div class="lab"><span>最优可行解 / 探索覆盖率</span><span class="mono" id="labBest">—</span></div><canvas class="chart" id="chartBest"></canvas></div>
+        <div class="chartBox"><div class="lab"><span>种群比例 C : B</span><span class="mono" id="labRatio">—</span></div><canvas class="chart" id="chartRatio"></canvas></div>
+        <div class="chartBox"><div class="lab"><span>可行率 / 迁移开销</span><span class="mono" id="labCost">—</span></div><canvas class="chart" id="chartCost"></canvas></div>
+      </section>
+      <section>
+        <h2>多任务分解与协同 <span id="taskCount">task board</span></h2>
+        <div id="taskList"></div>
+      </section>
+      <section>
+        <h2>俯视示意图 <span>same model, 2D</span></h2>
+        <canvas id="minimap"></canvas>
+      </section>
+      <section>
+        <h2>调度器决策流 <span>event log</span></h2>
+        <div id="eventLog"></div>
+      </section>
+    </aside>
+  </div>
+  <footer>
+    <div class="ctlGroup">
+      <button id="btnPlay" class="on">暂停</button>
+      <button id="btnStep" class="tiny">单步</button>
+      <button id="btnReset" class="tiny">重置</button>
+      <button id="btnTour" class="tiny">自动导览</button>
+    </div>
+    <div class="ctlGroup"><label>速度</label><input type="range" id="sldSpeed" min="1" max="12" value="4"><span class="mono" id="valSpeed">4×</span></div>
+    <input type="range" id="timeline" min="0" max="100" value="0">
+    <div id="timeLabel">t 0000</div>
+    <div class="ctlGroup">
+      <label>探索熵 λe</label><input type="range" id="sldLambdaE" min="0" max="100" value="35">
+      <label>约束强度</label><input type="range" id="sldRisk" min="0" max="100" value="55">
+      <label>场景复杂度</label><input type="range" id="sldComplexity" min="0" max="100" value="50">
+      <label>极限施压</label><input type="range" id="sldBreak" min="0" max="100" value="0">
+    </div>
+    <div id="formula">r = r_obj − λv·Cv + λe·H − λm·Cm</div>
+  </footer>
+</div>
+<script>
+'use strict';
+const CFG={N:22,HALF:11,TICKS:1100,TAU_MUD:.38,VOTE_NEED:2,B_MAX:4,C_MAX:8,LAMBDA_V:1.0,LAMBDA_M:.15};
+const PARTS=[{k:'all',n:'全景'},{k:'C',n:'小龙虾·嬉'},{k:'B',n:'波龙·惕'},{k:'S',n:'调度器'},{k:'M',n:'记忆池'},{k:'T',n:'地形'}];
+const VIEWS=[{k:'hero',n:'主视角'},{k:'top',n:'俯视'},{k:'side',n:'侧视'},{k:'inside',n:'岩隙内'}];
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+function makeField(p){
+  const peaks=[
+    {x:6.2,z:-5.8,a:1.00,s:2.30,label:'岩礁之隙 · 全局最优'},
+    {x:-7.2,z:5.4,a:.74,s:2.70,label:'次优峰'},
+    {x:1.8,z:7.2,a:.58,s:1.70,label:'局部陷阱'}];
+  if(p.complexity>.35)peaks.push({x:-7.8,z:-6.6,a:.46,s:1.50,label:'诱饵 D'});
+  if(p.complexity>.70)peaks.push({x:8.2,z:6.8,a:.40,s:1.40,label:'诱饵 E'});
+  const hazards=[{x:-2.6,z:-2.2,r:2.5},{x:4.2,z:3.4,r:1.9},{x:-8.4,z:-7.2,r:1.7}];
+  if(p.complexity>.55)hazards.push({x:1.0,z:-8.5,r:1.6});
+  const grow=1+p.stress*.95;
+  hazards.forEach(h=>h.r*=grow);
+  return{peaks,hazards,riskScale:.55+p.risk*1.05,gmax:0};
+}
+function fval(F,x,z){
+  let v=0;
+  for(const p of F.peaks){const d2=(x-p.x)**2+(z-p.z)**2;v+=p.a*Math.exp(-d2/(2*p.s*p.s));}
+  v+=.045*Math.sin(.85*x)*Math.cos(.72*z);
+  return clamp(v,0,1);
+}
+function risk(F,x,z){
+  let r=0;
+  for(const h of F.hazards)r=Math.max(r,Math.max(0,1-Math.hypot(x-h.x,z-h.z)/h.r));
+  const edge=Math.max(Math.abs(x),Math.abs(z))/CFG.HALF;
+  r=Math.max(r,Math.max(0,(edge-.86)/.14)*.55);
+  return clamp(r*F.riskScale,0,1);
+}
+const height=(F,x,z)=>fval(F,x,z)*2.35;
+function globalMax(F){
+  let g=0;
+  for(let i=0;i<=CFG.N;i++)for(let j=0;j<=CFG.N;j++){
+    const x=-CFG.HALF+i*2*CFG.HALF/CFG.N,z=-CFG.HALF+j*2*CFG.HALF/CFG.N;
+    if(risk(F,x,z)<.35)g=Math.max(g,fval(F,x,z));
+  }
+  return g;
+}
+function simulate(p){
+  const F=makeField(p);F.gmax=globalMax(F);
+  const rnd=mulberry32(20261105);
+  const ex=new Uint8Array(CFG.N*CFG.N);
+  const gi=(x,z)=>{const i=Math.floor((x+CFG.HALF)/(2*CFG.HALF)*CFG.N),j=Math.floor((z+CFG.HALF)/(2*CFG.HALF)*CFG.N);return i>=0&&i<CFG.N&&j>=0&&j<CFG.N?i*CFG.N+j:-1};
+  const isEx=(x,z)=>{const k=gi(x,z);return k>=0&&ex[k]===1};
+  const mark=(x,z,r)=>{for(let dx=-r;dx<=r;dx+=.85)for(let dz=-r;dz<=r;dz+=.85){if(dx*dx+dz*dz>r*r)continue;const k=gi(x+dx,z+dz);if(k>=0)ex[k]=1;}};
+  const agents=[];
+  for(let i=0;i<CFG.C_MAX;i++)agents.push({id:'C'+i,kind:'C',x:-8.6+rnd()*2.2,z:8.4-rnd()*2.2,state:'Wander',active:i<6,task:null,dwell:0,votes:0});
+  for(let i=0;i<CFG.B_MAX;i++)agents.push({id:'B'+i,kind:'B',x:-1+rnd()*2,z:-1+rnd()*2,state:'Idle',active:i<1,task:null,dwell:0,votes:0});
+  const w={t:0,agents,caves:[],reefs:[],tasks:[],events:[],trails:[],timeline:[],
+    best:0,prevBest:0,lastImprove:0,violations:0,abandoned:0,migration:0,vioT:0,migT:0,caveSeq:0,peak:F.peaks[0]};
+  const log=(kind,text)=>{w.events.push({t:w.t,kind,text});if(w.events.length>90)w.events.shift();};
+  const task=(type,label,assignee,dep)=>{const o={id:'T'+(w.tasks.length+1),type,label,assignee,dep,status:'pending'};w.tasks.push(o);return o};
+  task('MAP','空间探索 · 全域覆盖','C-pool','—').status='active';
+  task('DISCOVER','候选发现 · 淤泥窟标记','C-pool','T1').status='active';
+  task('REPORT','结果汇总 · 输出可行解','A_S','T2');
+  mark(-8.6,8.4,2.2);
+  log('s','A_S 初始化：6 探索机 + 1 求精机，任务 MAP / DISCOVER 已激活');
+  const setCounts=(wc,wb)=>{
+    let c=0,b=0;
+    for(const a of w.agents){if(a.kind==='C'){a.active=c<wc;c++;}else{a.active=b<wb;b++;}}
+    for(const a of w.agents){if(!a.active&&a.task){const cc=w.caves.find(q=>q.id===a.task);if(cc)cc.assigned=null;a.task=null;a.state='Idle';}}
+  };
+  function scheduler(){
+    const cov=w.m.coverage;
+    const pending=w.caves.filter(c=>c.state==='mud'&&!c.assigned&&c.votes<CFG.VOTE_NEED);
+    let wc,wb,why;
+    if(cov<.26){wc=Math.min(CFG.C_MAX,6+Math.round(p.lambdaE*2));wb=1;why='低覆盖 → 扩容探索池';}
+    else if(pending.length>0){wb=Math.min(CFG.B_MAX,Math.max(2,pending.length));wc=Math.max(3,7-Math.floor(wb/2));why='候选积压 → 增派求精机并做多机共识';}
+    else{wc=Math.max(3,Math.round(7-cov*3));wb=1;why='稳态 → 收缩探索、维持警戒';}
+    if(p.stress>.55)wb=Math.max(1,wb-1);
+    if(p.stress>.85){wb=1;why='高压 → 求精池收缩，共识放缓';}
+    setCounts(wc,wb);
+    const idle=w.agents.filter(a=>a.kind==='B'&&a.active&&!a.task);
+    for(const b of idle){
+      const c=pending.shift();if(!c)break;
+      c.assigned=b.id;b.task=c.id;b.target={x:c.x,z:c.z};b.state='Migrate';b.dwell=0;
+      const t=w.tasks.find(q=>q.type==='VERIFY'&&q.cid===c.id);if(t){t.status='active';t.assignee=b.id;}
+      log('s','派发 '+c.id+' → '+b.id+'（VERIFY · 约束核验与局部求精）');
+      w.migT++;
+    }
+    if(w.t-w.lastImprove>105&&w.t>60){
+      let bi=0,best=-1;
+      for(let q=0;q<4;q++){const cx=(q%2?1:-1)*6,cz=(q<2?1:-1)*6;let u=0;for(let d=-2;d<=2;d++)if(!isEx(cx+d,cz))u++;if(u>best){best=u;bi=q;}}
+      const cs=w.agents.filter(a=>a.kind==='C'&&a.active);
+      if(cs.length){const a=cs[Math.floor(rnd()*cs.length)];a.x=(bi%2?1:-1)*6;a.z=(bi<2?1:-1)*6;w.lastImprove=w.t;log('s','收益停滞 → 触发全域重采样，'+a.id+' 迁移至低覆盖象限');w.migT+=2;}
+    }
+    w.m.decision=why;
+  }
+  function stepC(a){
+    let bt=0,bs=-1e9,bu=0;
+    for(let k=0;k<8;k++){
+      const th=k*Math.PI/4+rnd()*.45;
+      const nx=a.x+Math.cos(th)*2.3,nz=a.z+Math.sin(th)*2.3;
+      if(Math.abs(nx)>CFG.HALF-.5||Math.abs(nz)>CFG.HALF-.5)continue;
+      let un=0;
+      for(let s=-1;s<=1;s++)for(let t=-1;t<=1;t++)if(!isEx(nx+s,nz+t))un++;
+      const sc=un+fval(F,nx,nz)*1.5-risk(F,nx,nz)*2.4+rnd()*p.lambdaE*8;
+      if(sc>bs){bs=sc;bt=th;bu=un;}
+    }
+    const st=.40+.24*rnd()*(.6+p.lambdaE);
+    let nx=clamp(a.x+Math.cos(bt)*st,-CFG.HALF+.4,CFG.HALF-.4),nz=clamp(a.z+Math.sin(bt)*st,-CFG.HALF+.4,CFG.HALF-.4);
+    if(risk(F,nx,nz)>.78){nx=a.x-Math.cos(bt)*st*.6;nz=a.z-Math.sin(bt)*st*.6;w.violations++;w.vioT++;a.state='Evade';}
+    else a.state=bu>3?'Wander':'MarkCave';
+    a.x=nx;a.z=nz;
+    mark(nx,nz,1.75);
+    const val=fval(F,nx,nz);
+    if(val>CFG.TAU_MUD){
+      const near=w.caves.some(c=>Math.hypot(c.x-nx,c.z-nz)<2.3)||w.reefs.some(c=>Math.hypot(c.x-nx,c.z-nz)<2.3);
+      if(!near){
+        const c={id:'H'+(++w.caveSeq),x:nx,z:nz,score:val,state:'mud',votes:0,voters:{},assigned:null,at:w.t};
+        w.caves.push(c);
+        const t=task('VERIFY','可行性核验 · '+c.id,'pending','T2');t.cid=c.id;t.status='pending';
+        log('c',a.id+' 发现 '+c.id+'  f='+val.toFixed(3)+' → 写入淤泥窟，生成 VERIFY 任务');
+      }
+    }
+    if(w.t%3===0)w.trails.push({t:w.t,id:a.id,kind:'C',x:nx,z:nz});
+  }
+  function stepB(a){
+    const c=w.caves.find(q=>q.id===a.task);
+    if(!c){a.state='Idle';return;}
+    if(a.state==='Migrate'){
+      const dx=c.x-a.x,dz=c.z-a.z,d=Math.hypot(dx,dz);
+      if(d>.55){a.x+=dx/d*.62;a.z+=dz/d*.62;w.migT++;}
+      else{a.state='DigLocal';a.dwell=0;log('b',a.id+' 抵达 '+c.id+' → DigLocal 局部梯度上升');}
+    }else if(a.state==='DigLocal'){
+      const e=.28;
+      const gx=(fval(F,a.x+e,a.z)-fval(F,a.x-e,a.z))/(2*e);
+      const gz=(fval(F,a.x,a.z+e)-fval(F,a.x,a.z-e))/(2*e);
+      const rx=(risk(F,a.x+e,a.z)-risk(F,a.x-e,a.z))/(2*e);
+      const rz=(risk(F,a.x,a.z+e)-risk(F,a.x,a.z-e))/(2*e);
+      let nx=a.x+.22*gx-.45*rx,nz=a.z+.22*gz-.45*rz;
+      if(risk(F,nx,nz)>.46){
+        nx=a.x-.14*gx-.30*rx;nz=a.z-.14*gz-.30*rz;
+        w.violations++;w.vioT++;a.state='VigilScan';
+      }
+      a.x=clamp(nx,-CFG.HALF+.4,CFG.HALF-.4);a.z=clamp(nz,-CFG.HALF+.4,CFG.HALF-.4);
+      c.x=a.x;c.z=a.z;
+      const v=fval(F,a.x,a.z);
+      if(v>c.score+.002){c.score=v;w.lastImprove=w.t;}
+      if(++a.dwell>13)a.state='VigilScan';
+    }else if(a.state==='VigilScan'||a.state==='Evade'){
+      let projSteps=0;
+      while(risk(F,a.x,a.z)>=.28&&projSteps<3){
+        const e=.30;
+        const rx=(risk(F,a.x+e,a.z)-risk(F,a.x-e,a.z))/(2*e);
+        const rz=(risk(F,a.x,a.z+e)-risk(F,a.x,a.z-e))/(2*e);
+        const n=Math.hypot(rx,rz)||1;
+        a.x=clamp(a.x-rx/n*.26,-CFG.HALF+.4,CFG.HALF-.4);
+        a.z=clamp(a.z-rz/n*.26,-CFG.HALF+.4,CFG.HALF-.4);
+        projSteps++;
+      }
+      w.vioT+=projSteps;
+      c.x=a.x;c.z=a.z;
+      const v=fval(F,a.x,a.z);
+      if(v>c.score+.002){c.score=v;w.lastImprove=w.t;}
+      const feas=risk(F,a.x,a.z)<.34&&projSteps<3;
+      const seen=c.voters[a.id]||0;
+      if(seen<2){c.voters[a.id]=seen+1;if(feas)c.votes++;}
+      c.tries=(c.tries||0)+1;
+      log('b',a.id+' 警戒扫描 '+c.id+'：'+(feas?'可行 +1 票':'约束投影 '+projSteps+' 步')+'（'+c.votes+'/'+CFG.VOTE_NEED+'）');
+      const vt=w.tasks.find(q=>q.type==='VERIFY'&&q.cid===c.id);
+      if(c.votes>=CFG.VOTE_NEED&&feas&&c.state==='mud'){
+        c.state='reef';w.reefs.push({x:c.x,z:c.z,score:c.score,t:w.t,id:c.id});
+        w.best=Math.max(w.best,c.score);w.lastImprove=w.t;
+        if(vt)vt.status='done';
+        const rt=task('REFINE','局部求精 · '+c.id,a.id,'T2');rt.status='done';
+        const tt=w.tasks.find(q=>q.type==='REPORT');
+        if(tt&&w.best>=F.gmax*.94&&tt.status!=='done'){
+          tt.status='done';
+          log('s','任务闭环：REPORT 完成，已求得全局可行解 f='+w.best.toFixed(3));
+        }
+        log('s','多机共识达成 → '+c.id+' 升级为岩礁隙，可行解 '+c.score.toFixed(3));
+        c.assigned=null;a.task=null;a.state='Idle';
+      }else if(projSteps>=3||(c.votes===0&&c.tries>=3)){
+        c.state='abandoned';w.abandoned++;
+        if(vt)vt.status='done';
+        log('b','高冲突区域 → Abandon，'+c.id+' 降权，交还探索池');
+        c.assigned=null;a.task=null;a.state='Idle';
+      }else{
+        c.assigned=null;a.task=null;a.state='Idle';
+      }
+    }
+    if(w.t%3===0)w.trails.push({t:w.t,id:a.id,kind:'B',x:a.x,z:a.z});
+  }
+  for(let tick=0;tick<CFG.TICKS;tick++){
+    w.t=tick;w.vioT=0;w.migT=0;
+    let nEx=0;for(let i=0;i<ex.length;i++)nEx+=ex[i];
+    w.m={coverage:nEx/ex.length,NC:0,NB:0,best:w.best,decision:'',t:tick};
+    for(const a of w.agents)if(a.active)w.m[a.kind==='C'?'NC':'NB']++;
+    if(tick%16===0)scheduler();
+    for(const a of w.agents)if(a.active){if(a.kind==='C')stepC(a);else stepB(a);}
+    const Cs=w.agents.filter(a=>a.kind==='C'&&a.active);
+    const spread=Cs.reduce((s,a)=>s+Math.hypot(a.x+7.5,a.z-7.5),0)/Math.max(1,Cs.length);
+    const ent=clamp(spread/16,0,1);
+    const rObj=(w.best-w.prevBest)*100;
+    const Cv=w.vioT*.30,Cm=w.migT*.35;
+    const reward=rObj-CFG.LAMBDA_V*Cv+p.lambdaE*ent-CFG.LAMBDA_M*Cm;
+    w.prevBest=w.best;
+    const taskDone={},taskActive={};
+    for(const tk of w.tasks){
+      if(tk.status==='done')taskDone[tk.type]=(taskDone[tk.type]||0)+1;
+      else if(tk.status==='active')taskActive[tk.type]=(taskActive[tk.type]||0)+1;
+    }
+    Object.assign(w.m,{
+      entropy:ent,reward,violations:w.violations,migration:w.migration+w.migT*.02,
+      discovered:w.caves.length,reefs:w.reefs.length,abandoned:w.abandoned,
+      feasibleRatio:w.reefs.length/Math.max(1,w.reefs.length+w.abandoned),
+      solved:w.best>=F.gmax*.94,
+      bestScore:w.best,gmax:F.gmax,
+      taskDone,taskActive,frontier:0
+    });
+    w.migration+=w.migT*.02;
+    w.timeline.push({
+      t:tick,ex:ex.slice(),
+      agents:w.agents.map(a=>({id:a.id,kind:a.kind,x:a.x,z:a.z,state:a.state,active:a.active,task:a.task})),
+      caves:w.caves.map(c=>({id:c.id,x:c.x,z:c.z,score:c.score,state:c.state,votes:c.votes,at:c.at})),
+      reefs:w.reefs.map(r=>({...r})),
+      tasks:w.tasks.slice(-10).map(t=>({...t})),
+      events:w.events.slice(-34).map(e=>({...e})),
+      m:{...w.m}
+    });
+  }
+  return{F,timeline:w.timeline,trails:w.trails,gmax:F.gmax,peak:F.peaks[0]};
+}
+
+const R={cv:null,ctx:null,W:900,H:620,dpr:1};
+const S={
+  sim:null,t:0,playing:true,speed:4,
+  params:{lambdaE:.35,risk:.55,complexity:.50,stress:0},
+  view:'hero',part:'all',panels:true,
+  cam:{yaw:-.62,pitch:.62,zoom:1,tx:0,tz:0},
+  goal:{yaw:-.62,pitch:.62,zoom:1,tx:0,tz:0},
+  hd:{},hover:null,drag:null,lastUser:Date.now(),
+  opts:{trails:true,hazards:true,labels:true},
+  tourOn:false,tourStep:0,tourAt:0,frame:0,dirty:true
+};
+const VIEW_CFG={
+  hero:{yaw:-.62,pitch:.62,zoom:1,tx:0,tz:0},
+  top:{yaw:0,pitch:1.46,zoom:1.02,tx:0,tz:0},
+  side:{yaw:-.30,pitch:.22,zoom:1.10,tx:0,tz:0},
+  inside:{yaw:.92,pitch:.36,zoom:1.95,tx:6.2,tz:-5.8}
+};
+let CAM={cy:1,sy:0,cp:1,sp:0,s:20,cx:0,cy0:0,tx:0,tz:0};
+function syncCam(){
+  const c=S.cam;
+  CAM.cy=Math.cos(c.yaw);CAM.sy=Math.sin(c.yaw);
+  CAM.cp=Math.cos(c.pitch);CAM.sp=Math.sin(c.pitch);
+  CAM.s=Math.min(R.W,R.H)/(2*CFG.HALF*1.16)*c.zoom;
+  CAM.cx=R.W/2;CAM.cy0=R.H*.55;CAM.tx=c.tx;CAM.tz=c.tz;
+}
+function pr(x,y,z){
+  const X=x-CAM.tx,Z=z-CAM.tz;
+  const rx=X*CAM.cy-Z*CAM.sy,rz=X*CAM.sy+Z*CAM.cy;
+  return {x:CAM.cx+rx*CAM.s,y:CAM.cy0+(rz*CAM.sp-y*CAM.cp)*CAM.s,d:rz*CAM.cp+y*CAM.sp};
+}
+function mix(a,b,t){
+  const A=parseInt(a.slice(1),16),B=parseInt(b.slice(1),16);
+  const r=Math.round((A>>16)+(((B>>16)-(A>>16))*t));
+  const g=Math.round(((A>>8)&255)+((((B>>8)&255)-((A>>8)&255))*t));
+  const c=Math.round((A&255)+(((B&255)-(A&255))*t));
+  return 'rgb('+r+','+g+','+c+')';
+}
+function poly(ctx,pts,fill,stroke,lw){
+  ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);
+  for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i].x,pts[i].y);
+  ctx.closePath();
+  if(fill){ctx.fillStyle=fill;ctx.fill();}
+  if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw||.6;ctx.stroke();}
+}
+function ell3(ctx,L,cu,cv,cw,ru,rv,fill,stroke,ang){
+  const pts=[];
+  for(let k=0;k<16;k++){
+    const th=k/16*Math.PI*2;let du=Math.cos(th)*ru,dv=Math.sin(th)*rv;
+    if(ang){const c=Math.cos(ang),s=Math.sin(ang),u2=du*c-dv*s,v2=du*s+dv*c;du=u2;dv=v2;}
+    pts.push(L(cu+du,cv+dv,cw));
+  }
+  poly(ctx,pts,fill,stroke,.7);
+}
+function seg3(ctx,L,a,b,color,lw){
+  const p=L(a[0],a[1],a[2]),q=L(b[0],b[1],b[2]);
+  ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);
+  ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.lineCap='round';ctx.stroke();
+}
+function labelAt(ctx,p,text,fg,bg){
+  ctx.font='11px '+getComputedStyle(document.body).fontFamily;
+  const w=ctx.measureText(text).width+12;
+  ctx.fillStyle=bg||'rgba(44,44,42,.88)';
+  ctx.beginPath();ctx.roundRect(p.x-w/2,p.y-10,w,19,5);ctx.fill();
+  ctx.fillStyle=fg||'#fff';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(text,p.x,p.y);ctx.textAlign='start';ctx.textBaseline='alphabetic';
+}
+const RAMP=['#F4F1E9','#EDE5D2','#E3D4B1','#DABE90','#D6A06C','#C47B4D','#A94E32'];
+function terrainColor(v,cov,rk){
+  const q=Math.min(6,Math.floor(v*6.2));
+  if(!cov){
+    if(rk>.42)return mix('#F7F5EF','#C9B4AE',.5);
+    return mix('#F7F5EF',RAMP[q],.30);
+  }
+  let c=RAMP[q];
+  if(rk>.34)c=mix(c,'#B0413A',Math.min(.6,(rk-.34)*1.45));
+  return c;
+}
+function drawLobster(ctx,a,fr,F,alpha,explode){
+  const isC=a.kind==='C';
+  const base=isC?'#E2703A':'#A32D2D',light=isC?'#F7B98C':'#DE8C80',dark=isC?'#8A3D17':'#6E1B1B';
+  const h=S.hd[a.id]||0,ch=Math.cos(h),sh=Math.sin(h);
+  const y0=height(F,a.x,a.z)+.14;
+  const L=(u,v,w)=>pr(a.x+u*ch-v*sh,y0+w,a.z+u*sh+v*ch);
+  const rad=isC?2.05:1.10;
+  ctx.globalAlpha=alpha*.12;
+  const ring=[];
+  for(let k=0;k<=26;k++){const th=k/26*Math.PI*2;ring.push(L(Math.cos(th)*rad,Math.sin(th)*rad,0));}
+  poly(ctx,ring,base,null);
+  ctx.globalAlpha=alpha;
+  const open=.14+.15*Math.sin(fr.t*.17+(a.id.charCodeAt(1)||0));
+  for(const sg of [-1,1]){
+    for(let k=0;k<4;k++){
+      const u=.38-k*.33;
+      seg3(ctx,L,[u,sg*.30,.22],[u-.20,sg*.80,.03],dark,1.3);
+    }
+  }
+  ell3(ctx,L,-1.62,0,.20,.30,.30,base,dark);
+  for(let k=0;k<3;k++)ell3(ctx,L,-.78-k*.34,0,.29-k*.025,.30-k*.04,.35-k*.05,base,dark);
+  const tail=L(-1.95,0,.20),t1=L(-2.30,.34,.16),t2=L(-2.30,-.34,.16);
+  poly(ctx,[tail,t1,L(-2.16,0,.14),t2],light,dark,.7);
+  for(const sg of [-1,1]){
+    seg3(ctx,L,[.48,sg*.28,.30],[.95,sg*(.60+open*.30),.34],dark,3.2);
+    ell3(ctx,L,1.24,sg*(.76+open*.35),.34,.44,.25,light,dark,sg*.22);
+    seg3(ctx,L,[1.30,sg*(.76+open*.35),.34],[1.74,sg*(.60+open*.85),.32],dark,1.6);
+    seg3(ctx,L,[1.30,sg*(.76+open*.35),.34],[1.74,sg*(.96+open*.15),.37],dark,1.6);
+    seg3(ctx,L,[.84,sg*.13,.47],[1.62,sg*.34,.92],dark,1.2);
+    seg3(ctx,L,[1.62,sg*.34,.92],[2.28,sg*.60,1.02+open*.3],dark,1.0);
+    const e=L(.88,sg*.15,.50);
+    ctx.beginPath();ctx.arc(e.x,e.y,2.3,0,Math.PI*2);ctx.fillStyle='#2C2C2A';ctx.fill();
+    ctx.beginPath();ctx.arc(e.x-.6,e.y-.7,.8,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,.8)';ctx.fill();
+  }
+  if(explode>.01){
+    ell3(ctx,L,0,0,.40+explode*.58,.94,.49,light,dark);
+    const core=L(0,0,.32);
+    ctx.beginPath();ctx.arc(core.x,core.y,7,0,Math.PI*2);
+    ctx.fillStyle=isC?'#FCEDE3':'#F9EAEA';ctx.fill();
+    ctx.strokeStyle=dark;ctx.lineWidth=1.2;ctx.stroke();
+    labelAt(ctx,L(0,0,1.22),isC?'嬉 · 高熵探索':'惕 · 约束投影','#fff',isC?'#8A3D17':'#6E1B1B');
+  }else{
+    ell3(ctx,L,0,0,.40,.94,.49,base,dark);
+    ell3(ctx,L,-.08,0,.45,.66,.29,light,null);
+    ctx.globalAlpha=alpha*.55;
+    ctx.beginPath();const g1=L(.25,-.30,.47),g2=L(-.50,.30,.47);
+    ctx.moveTo(g1.x,g1.y);ctx.lineTo(g2.x,g2.y);ctx.strokeStyle=dark;ctx.lineWidth=1;ctx.stroke();
+    ctx.globalAlpha=alpha;
+  }
+  if(S.hover===a.id||S.part===a.kind){
+    labelAt(ctx,L(0,0,1.05),a.id+' · '+a.state,'#fff',isC?'#8A3D17':'#6E1B1B');
+  }
+  ctx.globalAlpha=1;
+}
+function drawHabitat(ctx,it,F){
+  const p=pr(it.x,height(F,it.x,it.z)+.03,it.z);
+  const top=pr(it.x,height(F,it.x,it.z)+it.h,it.z);
+  const reef=it.kind==='reef',dead=it.kind==='dead';
+  const col=dead?'#9A988F':reef?'#3B6D11':'#BA7517';
+  ctx.setLineDash([3,3]);
+  ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(top.x,top.y);
+  ctx.strokeStyle=col;ctx.lineWidth=1;ctx.stroke();ctx.setLineDash([]);
+  const rr=reef?9:6;
+  ctx.beginPath();ctx.ellipse(p.x,p.y,rr,rr*.42,0,0,Math.PI*2);
+  ctx.strokeStyle=col;ctx.lineWidth=reef?2.2:1.5;ctx.stroke();
+  if(reef){ctx.fillStyle='rgba(59,109,17,.16)';ctx.fill();}
+  ctx.beginPath();ctx.arc(top.x,top.y,reef?4:3,0,Math.PI*2);
+  ctx.fillStyle=col;ctx.fill();
+  if(!dead&&(S.opts.labels||S.hover===it.id)){
+    labelAt(ctx,{x:top.x,y:top.y-13},it.id+(reef?' ✓ f='+it.score.toFixed(2):' f='+it.score.toFixed(2)),'#fff',col);
+  }
+}
+function renderScene(fr){
+  const ctx=R.ctx,F=S.sim.F;
+  syncCam();ctx.clearRect(0,0,R.W,R.H);
+  ctx.lineJoin='round';
+  const G=CFG.N,st=2*CFG.HALF/G,dl=[];
+  for(let i=0;i<G;i++)for(let j=0;j<G;j++){
+    const x0=-CFG.HALF+i*st,z0=-CFG.HALF+j*st,x1=x0+st,z1=z0+st;
+    const mx=(x0+x1)/2,mz=(z0+z1)/2;
+    const q=[pr(x0,height(F,x0,z0),z0),pr(x1,height(F,x1,z0),z0),pr(x1,height(F,x1,z1),z1),pr(x0,height(F,x0,z1),z1)];
+    dl.push({k:0,d:(q[0].d+q[1].d+q[2].d+q[3].d)/4,q,
+      fill:terrainColor(fval(F,mx,mz),fr.ex[i*G+j],risk(F,mx,mz))});
+  }
+  for(const c of fr.caves){
+    if(c.state==='reef')continue;
+    const p=pr(c.x,height(F,c.x,c.z),c.z);
+    dl.push({k:2,d:p.d,h:{id:c.id,x:c.x,z:c.z,score:c.score,kind:c.state==='abandoned'?'dead':'mud',h:.9}});
+  }
+  for(const r of fr.reefs){
+    const p=pr(r.x,height(F,r.x,r.z),r.z);
+    dl.push({k:2,d:p.d,h:{id:r.id,x:r.x,z:r.z,score:r.score,kind:'reef',h:1.5}});
+  }
+  for(const a of fr.agents){
+    if(!a.active)continue;
+    const p=pr(a.x,height(F,a.x,a.z),a.z);
+    dl.push({k:1,d:p.d,a});
+  }
+  dl.sort((u,v)=>u.d-v.d);
+  const focus=S.part;
+  for(const it of dl){
+    if(it.k===0){
+      poly(ctx,it.q,it.fill,'rgba(90,80,62,.10)',.5);
+    }else if(it.k===2){
+      if(focus==='T')continue;
+      drawHabitat(ctx,it.h,F);
+    }else{
+      if(focus==='T'||focus==='M')continue;
+      const mine=focus==='all'||focus===it.a.kind||focus==='S';
+      const alpha=mine?1:.20;
+      const explode=(focus===it.a.kind)?1:0;
+      drawLobster(ctx,it.a,fr,F,alpha,explode);
+    }
+  }
+  const a0=pr(-CFG.HALF,0,-CFG.HALF),a1=pr(CFG.HALF,0,-CFG.HALF),a2=pr(CFG.HALF,0,CFG.HALF),a3=pr(-CFG.HALF,0,CFG.HALF);
+  ctx.beginPath();ctx.moveTo(a0.x,a0.y);ctx.lineTo(a1.x,a1.y);ctx.lineTo(a2.x,a2.y);ctx.lineTo(a3.x,a3.y);ctx.closePath();
+  ctx.strokeStyle='rgba(44,44,42,.30)';ctx.lineWidth=1;ctx.stroke();
+  if(S.opts.hazards){
+    for(const hz of F.hazards){
+      const pts=[];
+      for(let k=0;k<=34;k++){const th=k/34*Math.PI*2,x=hz.x+Math.cos(th)*hz.r,z=hz.z+Math.sin(th)*hz.r;pts.push(pr(x,height(F,x,z)+.04,z));}
+      poly(ctx,pts,'rgba(196,65,58,.10)',null);
+      ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);
+      for(let k=1;k<pts.length;k++)ctx.lineTo(pts[k].x,pts[k].y);
+      ctx.strokeStyle='rgba(170,50,45,.62)';ctx.lineWidth=1.2;ctx.stroke();ctx.setLineDash([]);
+    }
+  }
+  if(S.opts.trails&&focus!=='T'){
+    const recent=SIM_TRAILS(fr.t);
+    for(const [id,arr] of Object.entries(recent)){
+      if(arr.length<2)continue;
+      const isC=id[0]==='C';
+      ctx.beginPath();
+      for(let k=0;k<arr.length;k++){
+        const p=pr(arr[k].x,height(F,arr[k].x,arr[k].z)+.07,arr[k].z);
+        k?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y);
+      }
+      ctx.strokeStyle=isC?'rgba(226,112,58,.34)':'rgba(163,45,45,.46)';
+      ctx.lineWidth=isC?1.1:1.6;ctx.stroke();
+    }
+  }
+  if(focus==='S'||focus==='M'){
+    const ctr=focus==='S'?pr(0,2.6,0):pr(-CFG.HALF+1,2.1,CFG.HALF-1);
+    ctx.setLineDash([2,4]);
+    const targets=focus==='S'
+      ?fr.agents.filter(a=>a.active).map(a=>pr(a.x,height(F,a.x,a.z)+.6,a.z))
+      :fr.caves.filter(c=>c.state!=='abandoned').map(c=>pr(c.x,height(F,c.x,c.z)+.5,c.z));
+    for(const q of targets){ctx.beginPath();ctx.moveTo(ctr.x,ctr.y);ctx.lineTo(q.x,q.y);ctx.strokeStyle=focus==='S'?'rgba(24,95,165,.55)':'rgba(186,117,23,.55)';ctx.lineWidth=1;ctx.stroke();}
+    ctx.setLineDash([]);
+    ctx.beginPath();ctx.arc(ctr.x,ctr.y,7,0,Math.PI*2);
+    ctx.fillStyle=focus==='S'?'#185FA5':'#BA7517';ctx.fill();
+    labelAt(ctx,{x:ctr.x,y:ctr.y-15},focus==='S'?'A_S · 集群协同脑':'M · 分布式记忆池','#fff',focus==='S'?'#185FA5':'#BA7517');
+  }
+  if(focus!=='M'){
+    for(const a of fr.agents){
+      if(a.kind!=='B'||!a.task)continue;
+      const c=fr.caves.find(q=>q.id===a.task);if(!c)continue;
+      const p=pr(a.x,height(F,a.x,a.z)+.5,a.z),q=pr(c.x,height(F,c.x,c.z)+.9,c.z);
+      ctx.setLineDash([5,3]);ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);
+      ctx.strokeStyle='rgba(163,45,45,.7)';ctx.lineWidth=1.4;ctx.stroke();ctx.setLineDash([]);
+    }
+  }
+  if(S.opts.labels&&focus!=='T'){
+    const pk=F.peaks[0],p=pr(pk.x,height(F,pk.x,pk.z)+2.0,pk.z);
+    labelAt(ctx,p,'岩礁之隙 · 全局最优','#fff','#712B13');
+  }
+}
+function SIM_TRAILS(t){
+  const out={},arr=S.sim.trails,lo=t-170;
+  for(let k=0;k<arr.length;k++){
+    const q=arr[k];
+    if(q.t>t)break;
+    if(q.t<lo)continue;
+    (out[q.id]||(out[q.id]=[])).push(q);
+  }
+  return out;
+}
+function drawChart(cv,series){
+  const w=cv.clientWidth||300,h=cv.clientHeight||52,dpr=Math.min(window.devicePixelRatio||1,2);
+  if(cv.width!==Math.round(w*dpr)||cv.height!==Math.round(h*dpr)){cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);}
+  const ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle='#E9E6DC';ctx.lineWidth=.5;
+  for(let i=1;i<4;i++){const y=h*i/4;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
+  for(const s of series){
+    const n=s.data.length;if(n<2)continue;
+    const mn=s.min===undefined?0:s.min,mx=s.max===undefined?1:s.max,rg=(mx-mn)||1;
+    ctx.beginPath();
+    for(let i=0;i<n;i++){
+      const x=2+(w-4)*i/(n-1),v=clamp((s.data[i]-mn)/rg,0,1),y=3+(h-6)*(1-v);
+      i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+    }
+    ctx.strokeStyle=s.color;ctx.lineWidth=1.6;ctx.lineJoin='round';ctx.stroke();
+    const last=clamp((s.data[n-1]-mn)/rg,0,1);
+    ctx.beginPath();ctx.arc(w-2,3+(h-6)*(1-last),2.2,0,Math.PI*2);ctx.fillStyle=s.color;ctx.fill();
+  }
+}
+function drawMinimap(cv,fr,F){
+  const w=cv.clientWidth||300,h=cv.clientHeight||118,dpr=Math.min(window.devicePixelRatio||1,2);
+  if(cv.width!==Math.round(w*dpr)||cv.height!==Math.round(h*dpr)){cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);}
+  const ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
+  const G=CFG.N,cw=w/G,ch=h/G;
+  const px=(x)=>(x+CFG.HALF)/(2*CFG.HALF)*w,pz=(z)=>(z+CFG.HALF)/(2*CFG.HALF)*h;
+  for(let i=0;i<G;i++)for(let j=0;j<G;j++){
+    const x=-CFG.HALF+(i+.5)*2*CFG.HALF/G,z=-CFG.HALF+(j+.5)*2*CFG.HALF/G;
+    ctx.fillStyle=terrainColor(fval(F,x,z),fr.ex[i*G+j],risk(F,x,z));
+    ctx.fillRect(i*cw,j*ch,cw+.6,ch+.6);
+  }
+  for(const hz of F.hazards){
+    ctx.beginPath();ctx.arc(px(hz.x),pz(hz.z),hz.r/(2*CFG.HALF)*w,0,Math.PI*2);
+    ctx.strokeStyle='rgba(170,50,45,.65)';ctx.setLineDash([3,2]);ctx.lineWidth=1;ctx.stroke();ctx.setLineDash([]);
+  }
+  for(const c of fr.caves){
+    if(c.state==='reef')continue;
+    ctx.beginPath();ctx.arc(px(c.x),pz(c.z),2.6,0,Math.PI*2);
+    ctx.fillStyle=c.state==='abandoned'?'#9A988F':'#BA7517';ctx.fill();
+  }
+  for(const r of fr.reefs){
+    ctx.beginPath();ctx.arc(px(r.x),pz(r.z),4.2,0,Math.PI*2);
+    ctx.fillStyle='#3B6D11';ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.stroke();
+  }
+  for(const a of fr.agents){
+    if(!a.active)continue;
+    ctx.beginPath();ctx.arc(px(a.x),pz(a.z),a.kind==='C'?2.6:3.4,0,Math.PI*2);
+    ctx.fillStyle=a.kind==='C'?'#E2703A':'#A32D2D';ctx.fill();
+  }
+  const pk=F.peaks[0];
+  ctx.beginPath();ctx.moveTo(px(pk.x)-5,pz(pk.z));ctx.lineTo(px(pk.x)+5,pz(pk.z));
+  ctx.moveTo(px(pk.x),pz(pk.z)-5);ctx.lineTo(px(pk.x),pz(pk.z)+5);
+  ctx.strokeStyle='#712B13';ctx.lineWidth=1.2;ctx.stroke();
+}
+const D={};
+const METRICS=[
+  {k:'bestScore',n:'最优可行解',f:v=>v.toFixed(3)},
+  {k:'coverage',n:'空间覆盖率',f:v=>(v*100).toFixed(1)+'%'},
+  {k:'entropy',n:'探索熵 H',f:v=>v.toFixed(3)},
+  {k:'violations',n:'约束违例 Cv',f:v=>String(v|0)},
+  {k:'feasibleRatio',n:'可行率',f:v=>(v*100).toFixed(0)+'%'},
+  {k:'migration',n:'迁移开销 Cm',f:v=>v.toFixed(1)},
+  {k:'discovered',n:'淤泥窟',f:v=>String(v|0)},
+  {k:'reefs',n:'岩礁隙',f:v=>String(v|0)}
+];
+const TOUR=[
+  {v:'top',p:'all',t:'俯视 · 全域空间覆盖',ms:4400},
+  {v:'hero',p:'C',t:'小龙虾 · 高熵探索与候选发现',ms:4400},
+  {v:'hero',p:'B',t:'波龙 · 约束投影与局部求精',ms:4400},
+  {v:'hero',p:'S',t:'调度器 · 多任务分解与指派',ms:4400},
+  {v:'top',p:'M',t:'记忆池 · 栖息地共识',ms:4200},
+  {v:'inside',p:'all',t:'岩隙内 · 可行解细节',ms:4200},
+  {v:'side',p:'T',t:'侧视 · 收益地形起伏',ms:3800},
+  {v:'hero',p:'all',t:'全景 · 双体协同',ms:4200}
+];
+function el(id){return document.getElementById(id);}
+function markUser(e){S.lastUser=Date.now();if(e&&e.target&&e.target.id==='btnTour')return;if(S.tourOn)stopTour();}
+function setView(k){
+  S.view=k;
+  const v=VIEW_CFG[k];
+  S.goal={yaw:v.yaw,pitch:v.pitch,zoom:v.zoom,tx:v.tx,tz:v.tz};
+  if(k==='inside'&&S.sim&&S.sim.timeline[Math.min(S.sim.timeline.length-1,S.t|0)].reefs.length){
+    const r=S.sim.timeline[Math.min(S.sim.timeline.length-1,S.t|0)].reefs[0];
+    S.goal.tx=r.x;S.goal.tz=r.z;
+  }
+  for(const [key,b] of Object.entries(D.viewBtns))b.classList.toggle('on',key===k);
+  S.dirty=true;
+}
+function setPart(k){
+  S.part=k;
+  for(const [key,b] of Object.entries(D.partBtns))b.classList.toggle('on',key===k);
+  S.dirty=true;
+}
+function buildBars(){
+  D.partBtns={};D.viewBtns={};
+  for(const p of PARTS){
+    const b=document.createElement('button');b.className='tiny';b.textContent=p.n;
+    b.onclick=()=>{markUser();setPart(p.k);};D.partBtns[p.k]=b;el('partBar').appendChild(b);
+  }
+  for(const v of VIEWS){
+    const b=document.createElement('button');b.className='tiny';b.textContent=v.n;
+    b.onclick=()=>{markUser();setView(v.k);};D.viewBtns[v.k]=b;el('viewBar').appendChild(b);
+  }
+  const toggles=[['trails','轨迹'],['hazards','风险区'],['labels','标注']];
+  for(const [k,n] of toggles){
+    const b=document.createElement('button');b.className='tiny on';b.textContent=n;
+    b.onclick=()=>{markUser();S.opts[k]=!S.opts[k];b.classList.toggle('on',S.opts[k]);S.dirty=true;};
+    el('viewBar2').appendChild(b);
+  }
+  const hp=document.createElement('button');hp.className='tiny';hp.textContent='面板';
+  hp.onclick=()=>{markUser();S.panels=!S.panels;document.body.classList.toggle('nopanels',!S.panels);};
+  el('viewBar2').appendChild(hp);
+  D.metric={};
+  for(const m of METRICS){
+    const d=document.createElement('div');d.className='metric';
+    d.innerHTML='<div class="k">'+m.n+'</div><div class="v mono">—</div>';
+    el('metricGrid').appendChild(d);D.metric[m.k]=d.querySelector('.v');
+  }
+  setPart('all');setView('hero');
+}
+function hist(key,fr,n){
+  const tl=S.sim.timeline,end=Math.max(0,Math.min(tl.length-1,fr.t|0));
+  const step=Math.max(1,Math.floor(end/(n-1))),out=[];
+  for(let i=Math.max(0,end-step*(n-1));i<=end;i+=step)out.push(tl[i].m[key]||0);
+  return out;
+}
+function updatePanels(fr){
+  const m=fr.m;
+  el('bigNum').textContent=m.bestScore.toFixed(3);
+  let why='稳态 · 维持警戒';
+  for(let k=fr.t;k>Math.max(0,fr.t-17);k--){const d=S.sim.timeline[k].m.decision;if(d){why=d;break;}}
+  el('statusText').textContent=(m.solved?'✓ 已求得可行解':'运行中')+' · '+why+' · '+(m.NC|0)+'C / '+(m.NB|0)+'B';
+  for(const mm of METRICS)D.metric[mm.k].textContent=mm.f(m[mm.k]||0);
+  el('labBest').textContent=m.bestScore.toFixed(2)+' / '+m.gmax.toFixed(2);
+  el('labRatio').textContent=(m.NC|0)+' : '+(m.NB|0);
+  el('labCost').textContent=(m.feasibleRatio*100).toFixed(0)+'% / '+m.migration.toFixed(1);
+  drawChart(el('chartBest'),[
+    {data:hist('bestScore',fr,150),min:0,max:1,color:'#A32D2D'},
+    {data:hist('coverage',fr,150),min:0,max:1,color:'#E2703A'}]);
+  drawChart(el('chartRatio'),[
+    {data:hist('NC',fr,150),min:0,max:8,color:'#E2703A'},
+    {data:hist('NB',fr,150),min:0,max:5,color:'#A32D2D'}]);
+  drawChart(el('chartCost'),[
+    {data:hist('feasibleRatio',fr,150),min:0,max:1,color:'#3B6D11'},
+    {data:hist('reward',fr,150),min:-6,max:12,color:'#BA7517'}]);
+  const STAGES=[
+    {k:'MAP',n:'空间探索 · 全域覆盖',who:'C-pool'},
+    {k:'DISCOVER',n:'候选发现 · 淤泥窟标记',who:'C-pool'},
+    {k:'VERIFY',n:'可行性核验 · 多机共识',who:'B-pool'},
+    {k:'REFINE',n:'局部求精 · 约束投影',who:'B-pool'},
+    {k:'REPORT',n:'结果汇总 · 输出可行解',who:'A_S'}
+  ];
+  const done=fr.m.taskDone||{},act=fr.m.taskActive||{};
+  let dn=0,ac=0;
+  for(const o of Object.values(done))dn+=o;
+  for(const o of Object.values(act))ac+=o;
+  el('taskCount').textContent=dn+' done / '+ac+' active';
+  const box=el('taskList');box.innerHTML='';
+  STAGES.forEach((st,i)=>{
+    const d=done[st.k]||0,a=act[st.k]||0;
+    const status=(st.k==='REPORT'&&m.solved)||d>0?'done':a>0?'active':'pending';
+    const row=document.createElement('div');row.className='task '+status;
+    const tail=st.k==='REPORT'&&m.solved?'✓ 已闭环':d>0?d+' ✓':a>0?'运行中':'待命';
+    row.innerHTML='<span class="dot"></span><span class="tid">S'+(i+1)+'</span><span>'+st.n+'</span><span class="who">'+st.who+' · '+tail+'</span>';
+    box.appendChild(row);
+  });
+  drawMinimap(el('minimap'),fr,S.sim.F);
+  const lg=el('eventLog');lg.innerHTML='';
+  for(const e of fr.events.slice(-26).reverse()){
+    const d=document.createElement('div');
+    d.innerHTML='<b class="'+e.kind+'">'+String(e.t).padStart(4,'0')+'</b> '+e.text;
+    lg.appendChild(d);
+  }
+  el('timeline').value=fr.t;
+  el('timeLabel').textContent='t '+String(fr.t).padStart(4,'0');
+}
+function hitTest(mx,my){
+  const fr=S.sim.timeline[Math.min(S.sim.timeline.length-1,S.t|0)];
+  syncCam();let best=null,bd=24;
+  for(const a of fr.agents){
+    if(!a.active)continue;
+    const p=pr(a.x,height(S.sim.F,a.x,a.z)+.55,a.z);
+    const d=Math.hypot(p.x-mx,p.y-my);
+    if(d<bd){bd=d;best=a.id;}
+  }
+  for(const c of fr.caves){
+    const p=pr(c.x,height(S.sim.F,c.x,c.z)+.9,c.z);
+    const d=Math.hypot(p.x-mx,p.y-my);
+    if(d<bd){bd=d;best=c.id;}
+  }
+  return best;
+}
+function showTip(mx,my,id){
+  const tip=el('tip');
+  if(!id){tip.style.opacity=0;return;}
+  const fr=S.sim.timeline[Math.min(S.sim.timeline.length-1,S.t|0)];
+  const a=fr.agents.find(q=>q.id===id);
+  let txt;
+  if(a){
+    txt=a.id+' · '+a.kind+' · '+a.state+'  @('+a.x.toFixed(1)+', '+a.z.toFixed(1)+')'+(a.task?' → '+a.task:'');
+    txt+='  f='+fval(S.sim.F,a.x,a.z).toFixed(3)+'  risk='+risk(S.sim.F,a.x,a.z).toFixed(2);
+  }else{
+    const c=fr.caves.find(q=>q.id===id);
+    txt=c?id+' · '+(c.state==='reef'?'岩礁隙':c.state==='abandoned'?'已弃用':'淤泥窟')+'  f='+c.score.toFixed(3)+'  共识 '+c.votes+'/'+CFG.VOTE_NEED:c||id;
+  }
+  tip.textContent=txt;tip.style.left=(mx+14)+'px';tip.style.top=(my-30)+'px';tip.style.opacity=1;
+}
+function bindUI(){
+  const cv=R.cv;
+  cv.addEventListener('pointerdown',e=>{
+    markUser();cv.setPointerCapture(e.pointerId);
+    S.drag={x:e.clientX,y:e.clientY,yaw:S.goal.yaw,pitch:S.goal.pitch};
+  });
+  cv.addEventListener('pointermove',e=>{
+    const r=cv.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;
+    if(S.drag){
+      S.goal.yaw=S.drag.yaw+(e.clientX-S.drag.x)*.007;
+      S.goal.pitch=clamp(S.drag.pitch+(e.clientY-S.drag.y)*.005,.10,1.52);
+      S.cam.yaw=S.goal.yaw;S.cam.pitch=S.goal.pitch;S.dirty=true;
+    }else{
+      S.hover=hitTest(mx,my);showTip(mx,my,S.hover);
+    }
+  });
+  cv.addEventListener('pointerup',()=>{S.drag=null;});
+  cv.addEventListener('pointerleave',()=>{S.drag=null;S.hover=null;showTip(0,0,null);});
+  cv.addEventListener('wheel',e=>{
+    e.preventDefault();markUser();
+    S.goal.zoom=clamp(S.goal.zoom*(e.deltaY>0?.92:1.08),.55,3.2);S.cam.zoom=S.goal.zoom;S.dirty=true;
+  },{passive:false});
+  document.addEventListener('keydown',e=>{
+    if(e.code==='Space'){e.preventDefault();markUser();S.playing=!S.playing;el('btnPlay').textContent=S.playing?'暂停':'播放';el('btnPlay').classList.toggle('on',S.playing);}
+    else if(e.key==='h'||e.key==='H'){markUser();S.panels=!S.panels;document.body.classList.toggle('nopanels',!S.panels);}
+    else if(e.key==='ArrowRight'){markUser();S.t=Math.min(S.sim.timeline.length-1,(S.t|0)+1);S.dirty=true;}
+    else if(e.key==='ArrowLeft'){markUser();S.t=Math.max(0,(S.t|0)-1);S.dirty=true;}
+    else if(e.key>='1'&&e.key<='4'){markUser();setView(VIEWS[+e.key-1].k);}
+  });
+  el('btnPlay').onclick=()=>{markUser();S.playing=!S.playing;el('btnPlay').textContent=S.playing?'暂停':'播放';el('btnPlay').classList.toggle('on',S.playing);};
+  el('btnStep').onclick=()=>{markUser();S.playing=false;el('btnPlay').textContent='播放';el('btnPlay').classList.remove('on');S.t=Math.min(S.sim.timeline.length-1,(S.t|0)+1);S.dirty=true;};
+  el('btnReset').onclick=()=>{markUser();S.t=0;S.hd={};S.dirty=true;};
+  el('btnTour').onclick=()=>{S.tourOn?stopTour():startTour();};
+  el('sldSpeed').oninput=e=>{markUser();S.speed=+e.target.value;el('valSpeed').textContent=S.speed+'×';};
+  el('timeline').oninput=e=>{markUser();S.t=+e.target.value;S.dirty=true;};
+  const sliders=[
+    ['sldLambdaE','lambdaE',100],['sldRisk','risk',100],
+    ['sldComplexity','complexity',100],['sldBreak','stress',100]];
+  for(const [id,key,div] of sliders){
+    el(id).oninput=e=>{
+      markUser();S.params[key]=+e.target.value/div;
+      el('statusText').textContent='重新求解中…';
+      clearTimeout(S.recalcTimer);
+      S.recalcTimer=setTimeout(rebuild,180);
+    };
+  }
+  document.addEventListener('pointerdown',markUser,{capture:true});
+}
+function startTour(){
+  S.tourOn=true;S.tourStep=0;S.tourAt=Date.now();S.playing=true;
+  el('btnPlay').textContent='暂停';el('btnPlay').classList.add('on');
+  el('btnTour').classList.add('on');
+}
+function stopTour(){
+  S.tourOn=false;S.lastUser=Date.now();
+  el('tourCursor').style.opacity=0;el('btnTour').classList.remove('on');
+}
+function tourTick(now){
+  if(!S.tourOn){
+    if(now-S.lastUser>25000)startTour();
+    return;
+  }
+  const st=TOUR[S.tourStep%TOUR.length];
+  if(now-S.tourAt>st.ms){
+    S.tourStep++;S.tourAt=now;
+    const nx=TOUR[S.tourStep%TOUR.length];
+    setView(nx.v);setPart(nx.p);
+    const tgt=el(nx.p==='all'?'viewBar':'partBar');
+    const b=(nx.p==='all'?D.viewBtns[nx.v]:D.partBtns[nx.p])||tgt;
+    const br=b.getBoundingClientRect(),sr=el('stage').getBoundingClientRect();
+    const cur=el('tourCursor');
+    cur.style.left=(br.left-sr.left+br.width/2)+'px';
+    cur.style.top=(br.top-sr.top+br.height/2)+'px';
+    cur.style.opacity=1;
+    el('statusText').textContent='自动导览 · '+nx.t;
+  }
+}
+function resize(){
+  const r=R.cv.getBoundingClientRect();
+  R.W=Math.max(320,r.width);R.H=Math.max(240,r.height);
+  R.dpr=Math.min(window.devicePixelRatio||1,2);
+  R.cv.width=Math.round(R.W*R.dpr);R.cv.height=Math.round(R.H*R.dpr);
+  R.ctx.setTransform(R.dpr,0,0,R.dpr,0,0);
+  S.dirty=true;
+}
+function rebuild(){
+  const keep=S.sim?S.t/Math.max(1,S.sim.timeline.length-1):0;
+  S.sim=simulate(S.params);
+  const n=S.sim.timeline.length;
+  el('timeline').max=String(n-1);
+  S.t=Math.round(keep*(n-1));S.hd={};S.dirty=true;
+  if(S.view==='inside')setView('inside');
+}
+let last=0,panelClock=0;
+function loop(now){
+  const dt=Math.min(.05,(now-last)/1000);last=now;
+  const n=S.sim.timeline.length;
+  if(S.playing&&S.t<n-1)S.t=Math.min(n-1,S.t+dt*S.speed*9);
+  const c=S.cam,g=S.goal,k=Math.min(1,dt*7);
+  c.yaw+=(g.yaw-c.yaw)*k;c.pitch+=(g.pitch-c.pitch)*k;
+  c.zoom+=(g.zoom-c.zoom)*k;c.tx+=(g.tx-c.tx)*k;c.tz+=(g.tz-c.tz)*k;
+  const fr=S.sim.timeline[Math.min(n-1,S.t|0)];
+  const pv=S.sim.timeline[Math.max(0,(S.t|0)-1)];
+  for(const a of fr.agents){
+    if(!a.active)continue;
+    const b=pv.agents.find(q=>q.id===a.id);
+    if(!b)continue;
+    const dx=a.x-b.x,dz=a.z-b.z;
+    if(Math.hypot(dx,dz)>.015){
+      const tgt=Math.atan2(dz,dx),cur=S.hd[a.id]===undefined?tgt:S.hd[a.id];
+      const diff=((tgt-cur+Math.PI*3)%(Math.PI*2))-Math.PI;
+      S.hd[a.id]=cur+diff*.3;
+    }
+  }
+  renderScene(fr);
+  if(S.dirty||now-panelClock>95){updatePanels(fr);panelClock=now;S.dirty=false;}
+  tourTick(now);
+  S.frame++;
+  requestAnimationFrame(loop);
+}
+function start(){
+  R.cv=el('scene');R.ctx=R.cv.getContext('2d');
+  if(!CanvasRenderingContext2D.prototype.roundRect){
+    CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h){this.rect(x,y,w,h);};
+  }
+  buildBars();bindUI();resize();
+  window.addEventListener('resize',resize);
+  rebuild();
+  const q=new URLSearchParams(location.search);
+  if(q.has('t'))S.t=clamp(parseInt(q.get('t'),10)||0,0,S.sim.timeline.length-1);
+  if(q.has('view')&&VIEW_CFG[q.get('view')])setView(q.get('view'));
+  if(q.has('part')&&D.partBtns[q.get('part')])setPart(q.get('part'));
+  if(q.has('pause')){
+    S.playing=false;el('btnPlay').textContent='播放';el('btnPlay').classList.remove('on');
+  }
+  S.dirty=true;
+  el('statusText').textContent='LRLS-v1.1 · solver ready · '+S.sim.timeline.length+' ticks';
+  requestAnimationFrame(t=>{last=t;loop(t);});
+}
+start();
+</script>
+</body>
+</html>

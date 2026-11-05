@@ -1,0 +1,172 @@
+% LRLS-v1.1 — arXiv source package
+% Deliberately conservative: standard article class, no external packages,
+% no figures, no bibtex. Compiles with pdflatex out of the box.
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+\title{LRLS-v1.1: A Specification and Reference Simulation for\\
+Dual-Agent Exploration--Exploitation under Hard Constraints}
+
+\author{Jason Sang\\
+\small Independent Researcher\\
+\small \texttt{Preprint version 1.0 --- 5 November 2026}}
+
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent We present LRLS (Lobster RL Specification), a formal specification for constrained optimisation in which the classical exploration--exploitation trade-off is \emph{role-separated} into two heterogeneous agent populations plus a scheduler. A high-entropy \emph{crayfish} population generates coarse candidate habitats (``mud caves''); a low-entropy, constraint-aware \emph{Boston lobster} population promotes candidates into verified feasible solutions (``reef gaps'') via local refinement and constraint projection; a scheduler allocates population budgets, dispatches tasks and triggers global resampling. The specification fixes the state decomposition, six action primitives, a single reward structure $r = r_{\mathrm{obj}} - \lambda_v C_v + \lambda_e \mathcal{H} - \lambda_m C_m$, a shared memory-pool schema, a four-stage training pipeline, seven mandatory reported metrics and a safety layer. We additionally describe v1.1 \emph{RoboZero}, which maps the agents onto a heterogeneous robot fleet with a geometric embedding space, gossip-synchronised memory, multi-robot consensus voting and zero-shot transfer routes. To make the specification executable, we release a dependency-free deterministic reference simulation (single HTML file, 1100 ticks, $22\times22$ reward terrain, 22 agents) and report illustrative single-run behaviour across four difficulty settings. \textbf{This is a specification and a reference implementation, not a claim of algorithmic superiority.} No learned policy, no multi-seed statistics, no baseline comparison and no physical-robot experiment are reported here; Section~6 states these limitations explicitly. The aim is to give the central hypothesis --- that a \emph{learned} switching scheduler outperforms fixed temperature or entropy annealing --- a precise, reproducible target that can subsequently be falsified.
+
+\smallskip
+\noindent\textbf{Keywords:} reinforcement learning specification; exploration--exploitation; multi-agent systems; constrained optimisation; heterogeneous robots; zero-shot transfer; crayfish optimisation algorithm
+\end{abstract}
+
+\section{Introduction}
+Balancing exploration against exploitation is among the oldest problems in reinforcement learning~\cite{kaelbling}. The dominant engineering solutions keep a \emph{single} policy and modulate its exploratory pressure with a schedule: an entropy coefficient~\cite{sac}, a temperature parameter, $\varepsilon$ decay, or a hand-tuned annealing curve. The schedule itself is almost never learned; it is a hyperparameter.
+
+Bio-inspired optimisers make the same choice. The \textbf{Crayfish Optimization Algorithm (COA)} of Jia et al.~\cite{coa}, published in \emph{Artificial Intelligence Review}, models three crayfish behaviours (summer resort / exploration, competition, foraging / exploitation) and switches between them using a \textbf{temperature threshold}. COA is a genuine, citable crayfish-inspired metaheuristic and already performs a fixed exploration--exploitation trade-off. We flag this because earlier drafts of this line of work referred to a ``lobster optimisation algorithm'' with operators such as territorial fighting and migration; no such operator set belongs to COA, and any citation of a placeholder reference is invalid. The present document removes those claims.
+
+LRLS asks a narrow question: \emph{what changes if the switching mechanism is not a threshold but an agent?} Rather than one population with a temperature dial, we instantiate two physically and observationally heterogeneous populations and a third controller that decides, from the global state, when to move resources from discovery to verification. This is structurally close to hierarchical RL / options~\cite{options} and to mixture-of-experts gating, but the division of labour is bound to an explicit memory schema, a fixed action-primitive vocabulary and a hard-constraint safety layer, so that the resulting object is an implementable specification rather than a diagram.
+
+\paragraph{On the metaphor.} The two agent names derive from a re-reading of Xunzi, \emph{Quan Xue}: the original text criticises distractibility, whereas this work splits it into two complementary temperaments --- \emph{yong xin xi ye} (restless, wide-ranging) and \emph{yong xin ti ye} (vigilant, still). This is a \textbf{narrative re-interpretation and a semantic inversion}, not a biological prior. We state it plainly so that no reader mistakes a literary device for empirical evidence. The companion text \emph{The Zen of OpenClaw}~\cite{zen} is a 41-aphorism ``mental manual'' in the same world-view; it carries no technical claim.
+
+\paragraph{Contributions.}
+\begin{enumerate}
+\item A complete, implementable specification (Section~3): state, action, reward, memory, scheduler, training, safety, metrics, versioning.
+\item A deterministic, zero-dependency reference implementation with a single solver driving all views (Section~4), plus illustrative results on four difficulty settings (Section~5).
+\item An explicit boundary of what has \emph{not} been shown (Section~6), including why the core hypothesis remains untested.
+\end{enumerate}
+
+\section{Related Work}
+\paragraph{Crayfish and swarm optimisation.} COA~\cite{coa} uses temperature-gated exploration/competition/foraging phases with position updates around a food centre. LRLS does not compete with COA as an optimiser; it uses the crayfish \emph{role} as one half of an RL decomposition and replaces the fixed temperature gate with a schedulable controller. A fair empirical comparison against COA's own temperature schedule is a required future baseline.
+
+\paragraph{Hierarchical RL and options.} Temporal abstraction~\cite{options} separates action selection across levels. LRLS's six primitives are effectively a fixed option set; the scheduler is a learned or warm-started option-selection policy. Unlike classical options, the option \emph{inventory} lives in a shared structured memory pool and carries feasibility labels.
+
+\paragraph{Maximum-entropy RL.} SAC~\cite{sac} adds an entropy term to the objective for a single policy. LRLS applies entropy regularisation \textbf{only} to the explorer branch (Section~3.8 forbids it on the refiner), which is a structural rather than a scalar separation.
+
+\paragraph{Multi-agent RL and CTDE.} MADDPG~\cite{maddpg} and MAPPO~\cite{mappo} establish centralised training with decentralised execution. LRLS-v1.1 assumes CTDE for the fleet extension and adds gossip-based memory consistency and consensus voting, closer to distributed agreement than to standard MARL credit assignment.
+
+\paragraph{Zero-shot transfer.} Sim-to-real transfer via domain randomisation~\cite{tobin} and the zero-shot generalisation survey~\cite{kirk} frame the v1.1 claim correctly: a frozen policy deployed on unseen target domains is \textbf{zero-shot transfer / domain generalisation}, not zero-shot learning in the LLM sense. It still depends on a pre-trained encoder and requires no target-domain interaction trajectories.
+
+\section{The LRLS Specification}
+
+\subsection{Roles}
+$A_C$: explorer (crayfish), coarse sensing, large steps, high entropy. $A_B$: vigilant miner (Boston lobster), fine sensing, small steps, constraint-aware. $A_S$: scheduler, allocates population sizes, switching time and task assignment. $M$: global memory pool. $C_v$: vigilance cost. $\mathcal{H}$: play entropy. $A_C$ \textbf{never} outputs a final feasible solution; it outputs candidate region indices. $A_B$ consumes mud caves and commits verified reef gaps. $A_S$ is the component whose learning is the actual research hypothesis.
+
+\subsection{State Space}
+\begin{equation}
+s = [\,s_{\mathrm{pos}},\ s_{\mathrm{reward}},\ s_{\mathrm{risk}},\ s_{\mathrm{memory}}\,]
+\end{equation}
+with coordinates/neighbourhood samples/gradient, current objective and neighbourhood best, constraint residual and boundary distance, and memory-pool summary respectively. Branch rule: $A_C$ receives a coarse encoding with reduced risk/memory dimensions; $A_B$ receives full fine-grained risk and constraint features. This asymmetry makes the populations heterogeneous rather than merely differently named.
+
+\subsection{Action Primitives}
+\begin{equation}
+A = \{\texttt{Wander},\ \texttt{MarkCave},\ \texttt{DigLocal},\ \texttt{VigilScan},\ \texttt{Migrate},\ \texttt{Abandon}\}
+\end{equation}
+= large-step sampling, register a mud cave, neighbourhood optimisation, evaluate constraints and project position, leave and request reassignment, mark decayed and demote. Continuous variants attach step size, perturbation amplitude and local iteration count.
+
+\subsection{Reward}
+\begin{equation}
+r(s,a) = r_{\mathrm{obj}} - \lambda_v C_v + \lambda_e \mathcal{H} - \lambda_m C_m
+\end{equation}
+$A_C$ increases $\lambda_e$ and decreases $\lambda_v$; $A_B$ increases $\lambda_v$ and decreases $\lambda_e$; $A_S$ is rewarded by improvement of the \textbf{population's best feasible solution}. $C_m$ is migration overhead.
+
+\subsection{Memory Pool}
+A single structured record carries \texttt{hid}, \texttt{type} (mud\_cave $|$ reef\_gap), \texttt{pos}, \texttt{score}, \texttt{feasible}, \texttt{risk}, \texttt{created\_by}, \texttt{last\_visit}, \texttt{decay}, \texttt{traj\_refs}. Mud caves use FIFO plus score-priority eviction; reef gaps are retained with slow decay and demoted if risk rises. Three replay partitions: \emph{play pool} (explorer trajectories, diversity), \emph{vigilance pool} (refiner trajectories, constraint labels), \emph{scheduler pool} (global state--action pairs).
+
+\subsection{Scheduler}
+$A_S$ observes global habitat distribution, per-region yield rate, risk level and population budget. It sets $(N_C,N_B)$, assigns mud caves to refiners, raises or lowers the exploration coefficient, and triggers full-domain resampling when improvement stalls. The specification permits a learned policy, a rule-based warm start, or a hybrid; the reference simulation implements the \textbf{rule-based warm start only}.
+
+\subsection{Training Pipeline (mandatory order)}
+(1) Behaviour-cloning warm start from heuristic expert trajectories; (2) cooperative online RL with three trajectory streams; (3) offline purification via constraint reinforcement and value distillation on high-quality reef gaps; (4) calibration sweeping $\lambda_v,\lambda_e,\lambda_m$ on a validation set. Update constraints: a refiner may not wander on unmarked caves; a cave assigned three times without a feasible result is permanently down-weighted; entropy regularisation is forbidden on $A_B$; the multi-agent variant uses CTDE.
+
+\subsection{Safety Layer}
+(i) \textbf{Projection}: every $A_B$ action is projected onto the feasible set; failure flags the habitat high-risk. (ii) \textbf{Circuit breaker}: if global feasibility drops below threshold, $A_S$ raises the explorer share and restarts sampling. (iii) \textbf{Isolation}: high-risk regions are never assigned to refiners. (iv) \textbf{Version lock}: changing the objective resets the memory pool.
+
+\subsection{Mandatory Metrics}
+Best Feasible Score, Discovery Rate, Feasibility Ratio, Entropy, Migration Overhead, Convergence Step, Robustness Degradation. Each rollout logs step, agent type, habitat ID, action, raw reward, risk, feasibility, entropy, environment version and specification version.
+
+\subsection{v1.1 \emph{RoboZero} Extension}
+Adds a geometric embedding space $Z$ shared across embodiments; gossip-synchronised local memory replicas; multi-robot consensus voting before promoting a cave; failure takeover; and three zero-shot routes (behaviour prototypes, semantic prompts, heuristic fallback). In the zero-shot phase the reward is used \textbf{for evaluation only}. Honest scope: this is zero-shot \emph{transfer} (no target-domain interaction trajectories), not zero-shot \emph{learning}; a pre-trained encoder is still required.
+
+\section{Reference Implementation}
+We release a \textbf{single offline HTML file} (no CDN, no build step, no dependencies). One deterministic solver pre-computes the whole timeline and every view --- 3D terrain, per-part breakdown, metric panels, charts, minimap, task board, event log --- reads the same frame via a pure \texttt{render(t)}.
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Parameter & Value & Meaning \\
+\hline
+Ticks & 1100 & pre-computed timeline \\
+Terrain & $22\times22$ & synthetic objective with hard-constraint zones \\
+Agents & 22 & mixed $A_C/A_B$ population \\
+\texttt{TAU\_MUD} & 0.27 & score threshold for a mud cave \\
+\texttt{VOTE\_NEED} & 2 & consensus votes to promote a reef gap \\
+\texttt{B\_MAX}/\texttt{C\_MAX} & 4/8 & scheduler population bounds \\
+\texttt{LAMBDA\_V}/\texttt{LAMBDA\_M} & 1.0/0.15 & violation and migration weights \\
+\hline
+\end{tabular}
+\end{center}
+
+The pipeline is \texttt{MAP} $\to$ \texttt{DISCOVER} $\to$ \texttt{VERIFY} $\to$ \texttt{REFINE} $\to$ \texttt{REPORT}. Three details determine whether a solution is ever found: (i) \texttt{DigLocal} performs a risk-gradient repulsion step before accepting a candidate; (ii) \texttt{VigilScan} applies bounded constraint projection (at most three gradient steps) and permits re-inspection so consensus is not permanently blocked; (iii) explorers do \textbf{not} pre-filter by risk --- over-filtering at discovery caused an earlier degenerate build with $\mathrm{best}=0.000$ and \texttt{REPORT} never closed. Stalled improvement triggers resampling. Reproducibility: seeded deterministic PRNG, URL state parameters, keyboard single-step and a scrub bar.
+
+\section{Illustrative Results}
+Four parameter settings were run through the same deterministic solver. These are \textbf{single-run illustrations of solver behaviour, not a statistical evaluation}; no learned policy is involved and no baseline is compared.
+
+\begin{center}
+\begin{tabular}{lcccccc}
+\hline
+Setting & Best & Reefs & Aband. & Viol. & First & REPORT \\
+\hline
+Easy & 0.998 & 16 & 0 & 0 & 63 & closed \\
+Default & 1.000 & 16 & 0 & 5 & 63 & closed \\
+High risk & 1.000 & 11 & 5 & 22 & 63 & closed \\
+Extreme & 1.000 & 15 & 1 & 50 & 79 & closed \\
+\hline
+\end{tabular}
+\end{center}
+
+Two observations are legitimate at this evidence level: (a) the pipeline closes in all four settings, i.e.\ the specification is internally executable; (b) harder constraints produce more violations, more abandonments and a later first feasible solution, so the difficulty sliders are not cosmetic. \textbf{No claim of improvement over COA, fixed-temperature annealing, PPO, MAPPO or any other baseline is made.} The objective surface is synthetic and normalised, so ``1.000'' means the solver's own known optimum was found, not a benchmark score.
+
+\section{Limitations}
+\begin{enumerate}
+\item \textbf{The central hypothesis is untested.} The scheduler in the reference implementation is a rule-based warm start; whether a learned scheduler beats fixed temperature / entropy annealing is exactly the question this specification enables.
+\item \textbf{No statistical evidence.} One deterministic run per setting; no multiple seeds, mean $\pm$ standard deviation, significance tests or confidence intervals.
+\item \textbf{No baselines.} COA, fixed-schedule SAC/PPO, random search and MAPPO are not compared.
+\item \textbf{No real embodiment.} Terrain is a synthetic 2D function; gossip delay, packet loss and actuator noise are not simulated.
+\item \textbf{Metaphor is not evidence.} The Xunzi reading is a deliberate semantic inversion used as a naming device; it supplies no behavioural prior.
+\item \textbf{``Zero-shot'' in the transfer sense.} A pre-trained encoder remains necessary.
+\item \textbf{Fallback confound.} Future evaluations must ablate the heuristic fallback as an independent factor.
+\item \textbf{Citation hygiene.} Earlier drafts contained placeholder references and an incorrect claim that CoRL is CCF-B; those are removed. CCF is a ranking catalogue, not a submission venue, and CoRL does not appear in it (ICRA is CCF-B, IROS is CCF-C).
+\end{enumerate}
+
+\section{Conclusion and Future Work}
+LRLS-v1.1 turns an exploration--exploitation narrative into a specification with a fixed state schema, action vocabulary, reward structure, memory contract, training order, safety rules and metric set, and pairs it with a deterministic, inspectable reference simulation. Its value at this stage is a \textbf{falsifiable target and a shared implementation contract}, not a result. Ordered next steps: (1) align related work with COA, options/HRL, CTDE and domain randomisation; (2) build a minimal Gymnasium-compatible constrained 2D benchmark; (3) run at least five seeds with mean $\pm$ standard deviation, ablation tables, the heuristic fallback as a separate ablation, and learned scheduling versus fixed temperature and entropy annealing; (4) only then prepare a conference submission. The correct sequence is \emph{specification $\to$ code $\to$ experiments $\to$ venue}.
+
+\paragraph{Data, code and license.} Reference simulator \texttt{assets/lrls-sim.html} is distributed with this preprint. Companion aphorism text: \url{https://github.com/clawgeek/openclaw-zen}. Proposal and maintainer response: \url{https://github.com/openclaw/openclaw/issues/192772}. Text CC~BY~4.0; code MIT. The mascot banner artwork is excluded.
+
+\paragraph{Origin and scope.} This preprint consolidates material generated in a ten-round dialogue dated 5 November 2026 (English translation of the title: ``Lobster Dual-Agent Reinforcement Learning Specification''), which produced a classical-Chinese exegesis, a dual-agent architecture, the LRLS-v1.0 specification, the v1.1 RoboZero extension, and two conference-style English drafts (ICRA and CoRL). Those drafts contained qualitative performance assertions without data. This document rewrites the material as a specification, removes unsupported claims and invalid references, and adds a runnable reference implementation. It is positioned as a \textbf{preprint of a specification}, not as a conference paper.
+
+\begin{thebibliography}{12}
+\bibitem{coa} H. Jia, H. Rao, C. Wen, and S. Mirjalili, ``Crayfish optimization algorithm,'' \emph{Artificial Intelligence Review}, vol. 56, suppl. 2, pp. 1919--1979, 2023. doi:10.1007/s10462-023-10520-4
+\bibitem{kaelbling} L. P. Kaelbling, M. L. Littman, and A. W. Moore, ``Reinforcement learning: A survey,'' \emph{JAIR}, vol. 4, pp. 237--285, 1996.
+\bibitem{options} R. S. Sutton, D. Precup, and S. Singh, ``Between MDPs and semi-MDPs: A framework for temporal abstraction in reinforcement learning,'' \emph{Artificial Intelligence}, vol. 112, nos. 1--2, pp. 181--211, 1999.
+\bibitem{sac} T. Haarnoja, A. Zhou, P. Abbeel, and S. Levine, ``Soft actor-critic: Off-policy maximum entropy deep reinforcement learning with a stochastic actor,'' in \emph{ICML}, 2018.
+\bibitem{ppo} J. Schulman, F. Wolski, P. Dhariwal, A. Radford, and O. Klimov, ``Proximal policy optimization algorithms,'' arXiv:1707.06347, 2017.
+\bibitem{maddpg} R. Lowe, Y. Wu, A. Tamar, J. Harb, P. Abbeel, and I. Mordatch, ``Multi-agent actor-critic for mixed cooperative-competitive environments,'' in \emph{NeurIPS}, 2017.
+\bibitem{mappo} C. Yu \emph{et al.}, ``The surprising effectiveness of PPO in cooperative multi-agent games,'' in \emph{NeurIPS}, 2022.
+\bibitem{tobin} J. Tobin \emph{et al.}, ``Domain randomization for transferring deep neural networks from simulation to the real world,'' in \emph{IROS}, 2017.
+\bibitem{kirk} R. Kirk, A. Zhang, E. Grefenstette, and T. Rockt\"aschel, ``A survey of zero-shot generalisation in deep reinforcement learning,'' \emph{JAIR}, vol. 76, pp. 201--264, 2023.
+\bibitem{xunzi} Xunzi, \emph{Quan Xue}, c. 3rd century BCE. Cited solely as the literary source of the naming metaphor.
+\bibitem{zen} J. Sang, \emph{The Zen of OpenClaw (aka The Lobster Sutra)} --- 41 aphorisms, 2026. \url{https://github.com/clawgeek/openclaw-zen}
+\bibitem{sim} J. Sang, \emph{Lobster Dual-Agent RL --- Interactive Reference Simulator}, single-file HTML distributed with this preprint, 2026.
+\end{thebibliography}
+
+\end{document}
