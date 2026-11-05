@@ -59,7 +59,7 @@ fig-parts.png             552,474 B
 | **Zenodo** | ✅ **已发布，DOI 10.5281/zenodo.23984055** | 8 文件全量存档，DataCite 可解析，已作为其余渠道的引用锚点 |
 | **ChinaXiv** | ⚠️ 待本人操作 | 中文全文 + `metadata/chinaxiv.md` 表单已回填 Zenodo DOI；需注册 + 实名认证，第三方不得代提交 |
 | **TechRxiv** | ⚠️ 待本人操作 / 通道存疑 | 英文全文 + `metadata/techrxiv.md` 已回填；命令行与真实 Edge 均被 Cloudflare 拦截（403），且 2026-05～07 迁移期社区反馈曾暂停收稿。若通道不可用，以 Zenodo DOI 作为英文引用入口 |
-| **arXiv** | 🟡 已注册、草稿已建，待背书 | 账号 `sangjiexun` 已注册并验证邮箱；投稿草稿 **8335852** 的 Start 页已全部保存（CC BY 4.0、Computer Science / Machine Learning cs.LG）。页面明确提示 "You are not endorsed for this archive"，背书码 **`KDOBWQ`** 已生成并发至 1009900122@qq.com。拿到背书后从 https://arxiv.org/submit/8335852/start 继续即可上传 `arxiv-package.zip` |
+| **arXiv** | 🟡 已注册、草稿已建，待背书 | 账号 `sangjiexun` 已注册并验证邮箱；投稿草稿 **8335852** 的 Start 页已全部保存（CC BY 4.0、Computer Science / Machine Learning cs.LG）。页面明确提示 "You are not endorsed for this archive"，背书码 **`KDOBWQ`** 已生成并发至 1009900122@qq.com。已用 arXiv API 筛出 10 位合格背书人（5 年内 ≥3 篇 cs 投稿、近 3 个月有投稿），其中 3 位 X 账号已核实（@j_foerst、@amyzhanginRL、@shimon8282，见 `metadata/endorsers.md`），公开求助推文已从 @clawgeek 发出。拿到背书后从 https://arxiv.org/submit/8335852/start 继续上传 `arxiv-package.zip` |
 
 ### 为什么另外三个不能由我代提交
 
