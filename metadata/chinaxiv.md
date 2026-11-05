@@ -38,7 +38,7 @@ LRLS-v1.1: A Specification and Reference Simulation for Dual-Agent Exploration�
 
 ## 说明 / 备注栏（建议填写）
 
-本预印本整合自 2026-11-05 的十轮对话《龙虾双体智能体强化学习规范》，已重写为规范文档，删除早期草稿中无数据支撑的性能断言与占位符参考文献，并补入可运行的确定性参考仿真。配套代码仓库：https://github.com/clawgeek/openclaw-zen 。本文正文 CC BY 4.0，参考实现 MIT。本文尚未在任何期刊或会议正式发表。
+本预印本整合自 2026-11-05 的十轮对话《龙虾双体智能体强化学习规范》，已重写为规范文档，删除早期草稿中无数据支撑的性能断言与占位符参考文献，并补入可运行的确定性参考仿真。本文英文全文及 8 个附件已于 2026-11-05 存缴 Zenodo，DOI：10.5281/zenodo.23984055（https://doi.org/10.5281/zenodo.23984055），许可 CC BY 4.0；本次投稿为中文版的同内容存缴，不构成重复发表。配套代码仓库：https://github.com/clawgeek/openclaw-zen 。本文正文 CC BY 4.0，参考实现 MIT。本文尚未在任何期刊或会议正式发表。
 
 ## 可获得的标识
 
@@ -49,7 +49,7 @@ LRLS-v1.1: A Specification and Reference Simulation for Dual-Agent Exploration�
 
 ## 与 Zenodo 的关系
 
-ChinaXiv 允许已在其他预印本平台存缴的同一内容再次存缴（公开先例：ChinaXiv:202608.00158 同时标注 arXiv 姊妹篇）。提交时在「说明」栏注明 Zenodo DOI 即可，不构成重复发表。
+ChinaXiv 允许已在其他预印本平台存缴的同一内容再次存缴（公开先例：ChinaXiv:202608.00158 同时标注 arXiv 姊妹篇）。提交时在「说明」栏注明 **Zenodo DOI 10.5281/zenodo.23984055** 即可，不构成重复发表。
 
 ## 许可选择建议
 
