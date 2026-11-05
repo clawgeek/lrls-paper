@@ -4,6 +4,18 @@
 
 作者：桑杰逊 Jason Sang · 独立研究者 · 预印本 v1.0 · 2026-11-05
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23984055.svg)](https://doi.org/10.5281/zenodo.23984055)
+
+**已正式发布到 Zenodo**：DOI [`10.5281/zenodo.23984055`](https://doi.org/10.5281/zenodo.23984055) · 概念 DOI `10.5281/zenodo.23984054` · [记录页](https://zenodo.org/record/23984055) · 8 个文件 / 1.96 MB / CC BY 4.0。
+
+引用格式：
+
+```
+Sang, J. (2026). LRLS-v1.1: A Specification and Reference Simulation for
+Dual-Agent Exploration–Exploitation under Hard Constraints. Zenodo.
+https://doi.org/10.5281/zenodo.23984055
+```
+
 本仓库是《龙虾双体智能体强化学习规范》从对话草稿整理成的**正式预印本**及其在四个发布渠道（Zenodo / ChinaXiv / TechRxiv / arXiv）的提交包。
 
 > 定位说明：本文是**规范 + 参考实现**，不是性能更优的算法论文。文中没有学习式调度策略、多种子统计、基线对比或真实机器人实验，第 6 节逐条列明局限。核心待验证假设是「学习式切换调度器优于固定温度／熵退火」。
@@ -12,16 +24,16 @@
 
 ## 四渠道状态一览
 
-| 渠道 | 产出 | 自动化程度 | 实测状态（2026-11-05） |
-|---|---|---|---|
-| **Zenodo** | DataCite 概念 DOI + 版本 DOI，1.96 MB 全量存档 | ✅ 脚本全自动（需 Personal Access Token） | 材料与脚本已就绪；未登录，GitHub OAuth 授权页已打开待本人确认 |
-| **ChinaXiv** | `10.12074/…` DOI + CSTR + 科创链 TXID 时间戳 | ⚠️ 网页表单（需实名账号） | 中文全文与表单内容已就绪；未登录，需注册+实名 |
-| **TechRxiv** | IEEE 预印本 DOI，与 ICRA/IROS/RA-L 兼容 | ⚠️ 网页表单（需 IEEE 账号） | 英文全文与表单内容已就绪；**真实浏览器亦被 Cloudflare 拦**，本环境不可达 |
-| **arXiv** | `arXiv:2611.xxxxx`，cs.LG + cs.RO/cs.MA | ⚠️ 网页表单（需账号 + 首次投稿背书） | LaTeX 源码与非 TeX PDF 两条路径均已就绪；未登录，需 endorsement |
+| 渠道 | 产出 | 状态（2026-11-06） |
+|---|---|---|
+| **Zenodo** | ✅ **`10.5281/zenodo.23984055`**（概念 DOI `…23984054`） | **已发布**：8 文件 / 1.96 MB / CC BY 4.0，DataCite 元数据已可解析 |
+| **ChinaXiv** | `10.12074/…` DOI + CSTR + 科创链 TXID | ⚠️ 中文全文与表单就绪并已回填 Zenodo DOI；需本人注册 + 实名 |
+| **TechRxiv** | IEEE 预印本 DOI | ⚠️ 表单就绪并已回填；真实浏览器亦被 Cloudflare 拦（403），投稿通道存疑 |
+| **arXiv** | `arXiv:2611.xxxxx`，cs.LG + cs.RO/cs.MA | ⚠️ LaTeX / PDF 两条路径就绪并已回填；硬阻塞是 endorsement（需同领域作者背书） |
 
-**为什么需要你本人操作**：四个平台都要求注册账号，ChinaXiv 需实名认证、arXiv 需同领域作者背书，这些在学术伦理与平台条款上都不能由第三方代提交。本包把所有可预置的材料与元数据做完，你只需登录 + 粘贴 + 上传。详细的连通性与登录态实测见 `STATUS.md`。
+**为什么另外三个需要你本人操作**：都要求作者本人的学术身份动作（实名、IEEE 账号、同行背书），学术伦理与平台条款上不宜由第三方代做。本包已完成全部可预置工作，你只需登录 + 粘贴 + 上传。实测细节见 `STATUS.md`。
 
-> **诚实声明**：截至本次执行结束，**尚未在任何平台取得 DOI 或 arXiv 编号**。已真实落地的公开记录是本仓库的 commit / `v1.0` tag / Release。
+> **诚实声明**：**已取得 1 个真实 DOI（Zenodo）**；ChinaXiv / TechRxiv / arXiv 尚未取得任何编号，未做任何虚构。
 
 ---
 
@@ -31,7 +43,11 @@
 
 本仓库的 commit 与 `v1.0` tag/release 即为公开、可验证的时间戳。Zenodo 开启 GitHub 集成后，打 tag 会自动存档。
 
-### Step 1 — Zenodo（最快拿 DOI）
+### Step 1 — Zenodo（✅ 已完成）
+
+**实际结果**：版本 DOI `10.5281/zenodo.23984055`，概念 DOI `10.5281/zenodo.23984054`，记录页 https://zenodo.org/record/23984055 。发布脚本与结果保存在 `tools/publish_zenodo.py`、`metadata/zenodo-result.json`。
+
+以下为可复现命令（**不需要再执行**）：
 
 ```bash
 # 1. 创建 token（scopes: deposit:write, deposit:actions）
@@ -76,6 +92,10 @@ python tools/publish_zenodo.py --live --publish
 
 把四个渠道拿到的 DOI / 编号统一写入 `metadata/zenodo-result.json` 与 `metadata/arxiv.md`，并在 GitHub release notes 里列出，形成单一可引用入口。
 
+**当前进度**：Zenodo DOI 已回填到 `chinaxiv.md` / `techrxiv.md` / `arxiv.md` 三个表单及本 README。拿到其余三个编号后，发一个 Zenodo 新版本（`newversion`）即可闭合互链——概念 DOI `10.5281/zenodo.23984054` 保持不变。
+
+> **安全提醒**：本次发布使用的 Zenodo Personal Access Token 曾出现在对话中，请立即到 https://zenodo.org/account/settings/applications/ 删除 `lrls-preprint-upload` / `lrls-deposit-temp` 两个临时 token。
+
 ---
 
 ## 文件树
@@ -93,9 +113,10 @@ LRLS-paper/
 │       └── fig-parts.png                 部件剖开视图
 ├── metadata/
 │   ├── zenodo.json                      Zenodo deposition 元数据 + 文件清单
-│   ├── chinaxiv.md                      ChinaXiv 表单内容
-│   ├── techrxiv.md                      TechRxiv 表单内容
-│   └── arxiv.md                         arXiv 表单内容与 2026 新规核对
+│   ├── zenodo-result.json               已发布结果（DOI / 概念 DOI / 记录页）
+│   ├── chinaxiv.md                      ChinaXiv 表单内容（已回填 Zenodo DOI）
+│   ├── techrxiv.md                      TechRxiv 表单内容（已回填 Zenodo DOI）
+│   └── arxiv.md                         arXiv 表单内容与 2026 新规核对（已回填）
 └── tools/
     ├── build_pdf.py                     Markdown → HTML（PDF 由 Edge 打印）
     ├── publish_zenodo.py                一键 Zenodo 存档/发布
