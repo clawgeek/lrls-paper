@@ -40,9 +40,35 @@ Foerster 的最新一篇正是 *Zero-Shot Coordination among LLM Agents*（2026-
 礼貌要点：① 说明已公开可核验（DOI + 代码）；② 明确「30 秒」降低心理成本；
 ③ 主动给出拒绝的台阶；④ 不在公开推文里贴背书码。
 
-## 触达现状
+## 触达现状（2026-11-06 02:0x 实测）
 
-- 公开推文已从 @clawgeek 发出（2026-11-06 01:5x），内容含题目摘要与 Zenodo DOI，
-  请对方私信联系；未公开背书码 `KDOBWQ`。
-- X 私信被 4 位 Chat passcode 加密锁住（x.com/i/chat 要求输入 passcode），
-  未解锁前无法自动发私信。解锁后可照上表逐条发送。
+| 对象 | 渠道 | 结果 |
+|---|---|---|
+| Jakob Foerster @j_foerst | X 私信（两条） | ✅ **已送达**（会话已置顶，含 DOI 与背书码），暂无回复 |
+| Amy Zhang @amyzhanginRL | X 私信 | ❌ 收件箱关闭（closed inbox） |
+| Shimon Whiteson @shimon8282 | X 私信 | ❌ 收件箱关闭 |
+
+另：`@clawgeek` 已发一条公开求助推文（含题目摘要 + Zenodo DOI，未贴背书码）。
+
+### ⚠️ 重要观察：X 上这类请求正在被嘲讽
+
+搜索 `"arxiv endorsement"` 的最新时间线里，热度最高的一条（7 小时前）是：
+
+> "do you also get weird emails from AI-psychotic independent researchers who want an arXiv endorsement?"
+
+同一时间线还有多人公开求背书（@FabyrkaAI、@copycode69 等）。也就是说，
+**冷启动私信求助已经变成一种被社区侧目的行为**。继续群发会伤及作者声誉，
+也可能触发 X 的反垃圾限制。建议就此停止广撒网，改走以下优先级：
+
+1. **熟人背书（最高成功率）**：找一位你实际认识、且在 cs 系分类有 3 篇以上投稿的老师/合作者。
+   国内做 MARL/RL 的高校作者大多满足条件，一条微信/邮件即可，不必公开求助。
+2. **改用不需要背书的渠道**：TechRxiv（本轮已确认 Cloudflare 放行、登录页可达）与 ChinaXiv
+   都不设背书门槛，可先拿到公开预印本编号，再回过头补 arXiv。
+3. 已有 Zenodo DOI 作为公开可核验锚点，本身已能证明工作存在，背书只是 arXiv 的账号风控要求。
+
+### 操作要点（可复用）
+
+- 打开别人私信：主页 `⋯` 菜单 → 发送消息；若显示 "This user has a closed inbox"，无法私信。
+- X Chat 需 4 位 passcode 解锁；发送用 **Ctrl+Enter**（点纸飞机按钮在本机会静默失败）。
+- 首条私信若含长链接会被吞，先发一句短文本建立会话，再补细节。
+
