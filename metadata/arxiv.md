@@ -50,7 +50,7 @@ We present LRLS (Lobster RL Specification), a formal specification for constrain
 
 ### Comments
 
-9 pages, 4 tables, 1 figure-free reference simulation distributed as ancillary file. Preprint of a specification; not a conference submission. Limitations in Section 6. Companion repository: https://github.com/clawgeek/openclaw-zen
+9 pages, 4 tables. Preprint of a specification; not a conference submission. Limitations in Section 6. An extended deposit (Chinese translation, LaTeX source, and a dependency-free reference simulation) is archived as DOI 10.5281/zenodo.23984055. Companion repository: https://github.com/clawgeek/openclaw-zen
 
 ### License
 
@@ -58,7 +58,7 @@ We present LRLS (Lobster RL Specification), a formal specification for constrain
 
 ### DOI / journal-ref
 
-留空。arXiv 不分配 DOI，只给 `arXiv:2611.xxxxx` 编号（可另由 Zenodo 提供 DataCite DOI）。
+DOI 栏可填已存在的 **Zenodo DOI `10.5281/zenodo.23984055`**（arXiv 表单的 journal-ref/DOI 为选填，用于指向同一工作的存档版本）；journal-ref 保持留空。arXiv 本身不分配 DOI，只给 `arXiv:2611.xxxxx` 编号。注意：若填写，须确认不会让审核员误以为本文已正式发表于期刊。
 
 ---
 
@@ -76,8 +76,8 @@ We present LRLS (Lobster RL Specification), a formal specification for constrain
 
 1. 找一位近年在 `cs.LG` / `cs.RO` 发过 arXiv 论文的合作者，在提交时填其邮箱，系统自动发确认信。
 2. 若作者已有 arXiv 账号且在其他分类有投稿记录，可申请分类扩展而非新用户背书。
-3. 先投 **Zenodo / ChinaXiv / TechRxiv** 建立公开记录，再以引用关系联系潜在背书人。
+3. 先建立公开记录 —— **Zenodo 已完成**：DOI `10.5281/zenodo.23984055`（8 文件、DataCite 可解析、CC BY 4.0）。给潜在背书人的邮件里可直接附此 DOI 与 GitHub release，证明工作已公开且可核验；ChinaXiv / TechRxiv 为可选补充。
 
 ## 提交后回填
 
-拿到 `arXiv:2611.xxxxx` 后，把它写入 `metadata/zenodo.json` 的 `related_identifiers`（relation: `isIdenticalTo`），并同步更新 Zenodo 的新版本，让四个渠道互相指向，形成完整的可引用链。
+拿到 `arXiv:2611.xxxxx` 后，把它写入 `metadata/zenodo.json` 的 `related_identifiers`（relation: `isIdenticalTo`），并发布 Zenodo **新版本**（v1.1，用 `newversion` action，概念 DOI `10.5281/zenodo.23984054` 保持不变），让四个渠道互相指向。当前已发布的版本 DOI 是 `10.5281/zenodo.23984055`。
