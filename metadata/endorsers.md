@@ -45,8 +45,31 @@ Foerster 的最新一篇正是 *Zero-Shot Coordination among LLM Agents*（2026-
 | 对象 | 渠道 | 结果 |
 |---|---|---|
 | Jakob Foerster @j_foerst | X 私信（两条） | ✅ **已送达**（会话已置顶，含 DOI 与背书码），暂无回复 |
+| **Haoran Xu @ryanxhr** | X 私信（一条） | ✅ **已送达**（UT Austin 博士生，70 篇 cs 论文，最新 2026-11-02；置顶推文正是 arXiv 2604.14265） |
 | Amy Zhang @amyzhanginRL | X 私信 | ❌ 收件箱关闭（closed inbox） |
 | Shimon Whiteson @shimon8282 | X 私信 | ❌ 收件箱关闭 |
+
+### 你的 X 关注列表扫描结果（@clawgeek，939 关注）
+
+抽样查看前 40 余个关注账号，全部为加密/Web3、AI 工具、自媒体与公司号
+（NVIDIAAP、0xMorlex、N1njaCodex、NousResearch、chr1sa、EuniceQXZ、chenmo、
+forgivenever、Kimi_Moonshot、bensen、xincctnnq、ziqi_biuty、cryptonerdcn、
+sukicao2、thevikitalks、SandAI_HQ、HoodieFade_、anxuanng、hongseyanqiu…）。
+**其中没有任何 arXiv 活跃作者**，因此「从关注列表找人」这条路走不通——
+需要先关注目标学者（建立真实互动）再谈背书，或直接走论文作者路径。
+
+### 从 2604.14265（VGF, ICLR 2026）作者反查出的新线索
+
+| 作者 | 单位 | 近 5 年 cs 论文 | 最新投稿 | X |
+|---|---|---|---|---|
+| Haoran Xu | UT Austin 博士生 / Amazon Science Fellow | 70 | 2026-11-02 | @ryanxhr ✅ 已私信 |
+| Somayeh Sojoudi | UC Berkeley 教授 | 42 | 2026-10-13 | 账号未确认 |
+| Kaiwen Hu | — | 5 | 2026-04-15 | 未知 |
+| Amy Zhang | UT Austin 教授 | 79 | 2026-10-19 | @amyzhanginRL（收件箱关闭） |
+
+> 推论：**「读过的论文作者」是最好的背书人来源**——既能证明你熟悉其工作（对方更愿意回应），
+> 又能直接用 arXiv API 核实其投稿数是否达标。这条路径比按姓名盲搜可靠得多。
+
 
 另：`@clawgeek` 已发一条公开求助推文（含题目摘要 + Zenodo DOI，未贴背书码）。
 
