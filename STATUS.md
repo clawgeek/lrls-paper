@@ -124,3 +124,30 @@ COA 式温度门控在四个档位上"更慢且更不安全"，正是本文要�
 
 **产出**：`paper/assets/fig-baselines.png`（双面板柱状图）、md 新增 §5.2 + 更新 §6 局限、
 main.tex 同步（新增 5.2 节 + Figure 4 + 表）、PDF 重建为 13 页 4 图、arxiv-package 重打包（774 KB）。
+
+---
+
+## CCF-C 投稿（IEEE CEC 2027）— 2026-11-07 00:50
+
+**投稿系统不是 PaperPlaza，是 EDAS**：https://edas.info/N35695
+（CFP 页 https://ieeecec.org/2027/authors/call-for-papers 的 "Submit Here" 指向该处）
+
+**硬阻塞**：EDAS 拒绝来自主机/IDC/VPN 出口的连接 —
+`We do not accept connections from hosting providers, such as VPNs: 92.113.124.75`。
+本机当前走代理出口，无法登录/提交；需关闭 VPN 或用普通宽带。
+
+**本轮把稿件从「排版能看」修到「可以直接投」**：
+
+| 问题 | 修法 |
+|---|---|
+| 页面是 A4 | 改 US Letter + IEEE 边距（上 .75in / 下 1in / 左右 .625in） |
+| 46 处 LaTeX 公式原样输出成 `f:/Omega/to[0,1]` | 写 LaTeX→Unicode/HTML 渲染器；公式在 markdown 转换**之前**抽成占位符，转换后回填 |
+| 三张图按 7.2in 整页宽设计，缩到单栏后不可读 | 新建 `tools/make_cec_figs.py`，按 3.42in 单栏宽重画；左图只保留 P2/P4 两档，右图改为「精炼者容量阶梯线」（P4 全程钉在 1，一眼可见） |
+| 无参考文献 | 补 8 条（COA / RL survey / SA / SAC / PPO / MAPPO / 本 preprint / 模拟器），文内加 [1]-[8] 引用 |
+| 表格无标题、跨栏、`vio@99%` 换行错位 | 加 TABLE I-IV 居中标题，`break-inside: avoid`，标签精简为 ev / vio |
+| 作者行不跨栏 | 修 `split_titleblock` 正则（`<p>` 带 class 时匹配不到） |
+
+**成品**：`paper/cec/cec-v1.pdf` — 4 页 short paper，US Letter，2 图 4 表 8 文献，字体全部嵌入。
+作者：Jason Sang (Sang Jiexun) / Independent Researcher / sangjeixun@gmail.com。
+
+**待确认**：邮箱拼写 `sangjeixun@` vs 既有账号 `sangjiexun@`（i/e 顺序不同），提交前需核对。
