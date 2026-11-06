@@ -1,0 +1,1786 @@
+{
+ "profiles": [
+  {
+   "name": "P1-mild",
+   "params": {
+    "lambdaE": 0.35,
+    "risk": 0.25,
+    "complexity": 0.2,
+    "stress": 0
+   },
+   "methods": {
+    "LRLS": [
+     {
+      "seed": 1,
+      "budget": 39911,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 401,
+      "n95": 327,
+      "n99": 327,
+      "vioAt99": 0,
+      "coverage": 0.9587
+     },
+     {
+      "seed": 2,
+      "budget": 38710,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 159,
+      "n95": 327,
+      "n99": 327,
+      "vioAt99": 0,
+      "coverage": 0.9876
+     },
+     {
+      "seed": 3,
+      "budget": 40576,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 241,
+      "n95": 327,
+      "n99": 327,
+      "vioAt99": 0,
+      "coverage": 0.9938
+     },
+     {
+      "seed": 4,
+      "budget": 36304,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 331,
+      "n95": 327,
+      "n99": 327,
+      "vioAt99": 0,
+      "coverage": 0.936
+     },
+     {
+      "seed": 5,
+      "budget": 35922,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 1153,
+      "n95": 327,
+      "n99": 327,
+      "vioAt99": 0,
+      "coverage": 0.9938
+     }
+    ],
+    "RS": [
+     {
+      "seed": 1,
+      "budget": 39911,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 3460,
+      "n95": 112,
+      "n99": 209,
+      "vioAt99": 13,
+      "coverage": null
+     },
+     {
+      "seed": 2,
+      "budget": 38710,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 3385,
+      "n95": 224,
+      "n99": 224,
+      "vioAt99": 20,
+      "coverage": null
+     },
+     {
+      "seed": 3,
+      "budget": 40576,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 3494,
+      "n95": 74,
+      "n99": 74,
+      "vioAt99": 5,
+      "coverage": null
+     },
+     {
+      "seed": 4,
+      "budget": 36304,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 3187,
+      "n95": 95,
+      "n99": 95,
+      "vioAt99": 6,
+      "coverage": null
+     },
+     {
+      "seed": 5,
+      "budget": 35922,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 3092,
+      "n95": 312,
+      "n99": 362,
+      "vioAt99": 37,
+      "coverage": null
+     }
+    ],
+    "SA": [
+     {
+      "seed": 1,
+      "budget": 39911,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 169,
+      "n95": 1278,
+      "n99": 1279,
+      "vioAt99": 84,
+      "coverage": null
+     },
+     {
+      "seed": 2,
+      "budget": 38710,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 172,
+      "n95": 1779,
+      "n99": 1783,
+      "vioAt99": 95,
+      "coverage": null
+     },
+     {
+      "seed": 3,
+      "budget": 40576,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 131,
+      "n95": 10,
+      "n99": 10,
+      "vioAt99": 0,
+      "coverage": null
+     },
+     {
+      "seed": 4,
+      "budget": 36304,
+      "best": 0.7385,
+      "firstEval": 1,
+      "vio": 254,
+      "n95": -1,
+      "n99": -1,
+      "vioAt99": 0,
+      "coverage": null
+     },
+     {
+      "seed": 5,
+      "budget": 35922,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 198,
+      "n95": 1372,
+      "n99": 1387,
+      "vioAt99": 196,
+      "coverage": null
+     }
+    ],
+    "COA-T": [
+     {
+      "seed": 1,
+      "budget": 39911,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 4828,
+      "n95": 47,
+      "n99": 47,
+      "vioAt99": 8,
+      "coverage": null
+     },
+     {
+      "seed": 2,
+      "budget": 38710,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 4642,
+      "n95": 9307,
+      "n99": 9307,
+      "vioAt99": 2174,
+      "coverage": null
+     },
+     {
+      "seed": 3,
+      "budget": 40576,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 5259,
+      "n95": 49,
+      "n99": 49,
+      "vioAt99": 5,
+      "coverage": null
+     },
+     {
+      "seed": 4,
+      "budget": 36304,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 4308,
+      "n95": 105,
+      "n99": 362,
+      "vioAt99": 63,
+      "coverage": null
+     },
+     {
+      "seed": 5,
+      "budget": 35922,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 4284,
+      "n95": 13,
+      "n99": 168,
+      "vioAt99": 29,
+      "coverage": null
+     }
+    ],
+    "SP-EA": [
+     {
+      "seed": 1,
+      "budget": 39911,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 667,
+      "n95": 177,
+      "n99": 177,
+      "vioAt99": 27,
+      "coverage": null
+     },
+     {
+      "seed": 2,
+      "budget": 38710,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 763,
+      "n95": 55,
+      "n99": 55,
+      "vioAt99": 8,
+      "coverage": null
+     },
+     {
+      "seed": 3,
+      "budget": 40576,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 739,
+      "n95": 131,
+      "n99": 131,
+      "vioAt99": 14,
+      "coverage": null
+     },
+     {
+      "seed": 4,
+      "budget": 36304,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 708,
+      "n95": 60,
+      "n99": 60,
+      "vioAt99": 11,
+      "coverage": null
+     },
+     {
+      "seed": 5,
+      "budget": 35922,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 690,
+      "n95": 83,
+      "n99": 131,
+      "vioAt99": 21,
+      "coverage": null
+     }
+    ]
+   },
+   "gmax": 1
+  },
+  {
+   "name": "P2-baseline",
+   "params": {
+    "lambdaE": 0.35,
+    "risk": 0.55,
+    "complexity": 0.5,
+    "stress": 0
+   },
+   "methods": {
+    "LRLS": [
+     {
+      "seed": 1,
+      "budget": 37476,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 1815,
+      "n95": 323,
+      "n99": 323,
+      "vioAt99": 0,
+      "coverage": 0.9855
+     },
+     {
+      "seed": 2,
+      "budget": 36959,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 2325,
+      "n95": 323,
+      "n99": 323,
+      "vioAt99": 0,
+      "coverage": 0.9793
+     },
+     {
+      "seed": 3,
+      "budget": 37412,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 2117,
+      "n95": 323,
+      "n99": 323,
+      "vioAt99": 0,
+      "coverage": 0.9731
+     },
+     {
+      "seed": 4,
+      "budget": 38012,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 1296,
+      "n95": 323,
+      "n99": 323,
+      "vioAt99": 0,
+      "coverage": 0.9463
+     },
+     {
+      "seed": 5,
+      "budget": 39822,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 1449,
+      "n95": 323,
+      "n99": 323,
+      "vioAt99": 0,
+      "coverage": 0.9814
+     }
+    ],
+    "RS": [
+     {
+      "seed": 1,
+      "budget": 37476,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 5862,
+      "n95": 112,
+      "n99": 209,
+      "vioAt99": 26,
+      "coverage": null
+     },
+     {
+      "seed": 2,
+      "budget": 36959,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 5862,
+      "n95": 224,
+      "n99": 224,
+      "vioAt99": 38,
+      "coverage": null
+     },
+     {
+      "seed": 3,
+      "budget": 37412,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 5844,
+      "n95": 74,
+      "n99": 74,
+      "vioAt99": 10,
+      "coverage": null
+     },
+     {
+      "seed": 4,
+      "budget": 38012,
+      "best": 1,
+      "firstEval": 2,
+      "vio": 6059,
+      "n95": 95,
+      "n99": 95,
+      "vioAt99": 10,
+      "coverage": null
+     },
+     {
+      "seed": 5,
+      "budget": 39822,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 6211,
+      "n95": 312,
+      "n99": 362,
+      "vioAt99": 59,
+      "coverage": null
+     }
+    ],
+    "SA": [
+     {
+      "seed": 1,
+      "budget": 37476,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 479,
+      "n95": 993,
+      "n99": 2328,
+      "vioAt99": 226,
+      "coverage": null
+     },
+     {
+      "seed": 2,
+      "budget": 36959,
+      "best": 0.7385,
+      "firstEval": 1,
+      "vio": 459,
+      "n95": -1,
+      "n99": -1,
+      "vioAt99": 0,
+      "coverage": null
+     },
+     {
+      "seed": 3,
+      "budget": 37412,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 559,
+      "n95": 10,
+      "n99": 10,
+      "vioAt99": 0,
+      "coverage": null
+     },
+     {
+      "seed": 4,
+      "budget": 38012,
+      "best": 1,
+      "firstEval": 2,
+      "vio": 163,
+      "n95": 676,
+      "n99": 677,
+      "vioAt99": 15,
+      "coverage": null
+     },
+     {
+      "seed": 5,
+      "budget": 39822,
+      "best": 0.7385,
+      "firstEval": 1,
+      "vio": 603,
+      "n95": -1,
+      "n99": -1,
+      "vioAt99": 0,
+      "coverage": null
+     }
+    ],
+    "COA-T": [
+     {
+      "seed": 1,
+      "budget": 37476,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 5959,
+      "n95": 47,
+      "n99": 47,
+      "vioAt99": 10,
+      "coverage": null
+     },
+     {
+      "seed": 2,
+      "budget": 36959,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 5630,
+      "n95": 1655,
+      "n99": 1844,
+      "vioAt99": 541,
+      "coverage": null
+     },
+     {
+      "seed": 3,
+      "budget": 37412,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 5906,
+      "n95": 49,
+      "n99": 49,
+      "vioAt99": 7,
+      "coverage": null
+     },
+     {
+      "seed": 4,
+      "budget": 38012,
+      "best": 1,
+      "firstEval": 4,
+      "vio": 5850,
+      "n95": 105,
+      "n99": 362,
+      "vioAt99": 75,
+      "coverage": null
+     },
+     {
+      "seed": 5,
+      "budget": 39822,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 5872,
+      "n95": 13,
+      "n99": 168,
+      "vioAt99": 39,
+      "coverage": null
+     }
+    ],
+    "SP-EA": [
+     {
+      "seed": 1,
+      "budget": 37476,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 931,
+      "n95": 66,
+      "n99": 84,
+      "vioAt99": 11,
+      "coverage": null
+     },
+     {
+      "seed": 2,
+      "budget": 36959,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 1223,
+      "n95": 407,
+      "n99": 787,
+      "vioAt99": 139,
+      "coverage": null
+     },
+     {
+      "seed": 3,
+      "budget": 37412,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 867,
+      "n95": 131,
+      "n99": 131,
+      "vioAt99": 18,
+      "coverage": null
+     },
+     {
+      "seed": 4,
+      "budget": 38012,
+      "best": 1,
+      "firstEval": 2,
+      "vio": 2394,
+      "n95": 142,
+      "n99": 142,
+      "vioAt99": 27,
+      "coverage": null
+     },
+     {
+      "seed": 5,
+      "budget": 39822,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 843,
+      "n95": 83,
+      "n99": 131,
+      "vioAt99": 26,
+      "coverage": null
+     }
+    ]
+   },
+   "gmax": 1
+  },
+  {
+   "name": "P3-highrisk",
+   "params": {
+    "lambdaE": 0.3,
+    "risk": 0.68,
+    "complexity": 0.62,
+    "stress": 0.3
+   },
+   "methods": {
+    "LRLS": [
+     {
+      "seed": 1,
+      "budget": 37756,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 3208,
+      "n95": 302,
+      "n99": 302,
+      "vioAt99": 0,
+      "coverage": 0.9835
+     },
+     {
+      "seed": 2,
+      "budget": 38456,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 3091,
+      "n95": 302,
+      "n99": 302,
+      "vioAt99": 0,
+      "coverage": 0.9752
+     },
+     {
+      "seed": 3,
+      "budget": 37612,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 2300,
+      "n95": 302,
+      "n99": 302,
+      "vioAt99": 0,
+      "coverage": 0.9525
+     },
+     {
+      "seed": 4,
+      "budget": 37651,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 3017,
+      "n95": 302,
+      "n99": 302,
+      "vioAt99": 0,
+      "coverage": 0.9773
+     },
+     {
+      "seed": 5,
+      "budget": 42212,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 1934,
+      "n95": 302,
+      "n99": 302,
+      "vioAt99": 0,
+      "coverage": 0.9711
+     }
+    ],
+    "RS": [
+     {
+      "seed": 1,
+      "budget": 37756,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 8255,
+      "n95": 112,
+      "n99": 209,
+      "vioAt99": 44,
+      "coverage": null
+     },
+     {
+      "seed": 2,
+      "budget": 38456,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 8495,
+      "n95": 224,
+      "n99": 224,
+      "vioAt99": 54,
+      "coverage": null
+     },
+     {
+      "seed": 3,
+      "budget": 37612,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 8235,
+      "n95": 74,
+      "n99": 74,
+      "vioAt99": 15,
+      "coverage": null
+     },
+     {
+      "seed": 4,
+      "budget": 37651,
+      "best": 1,
+      "firstEval": 2,
+      "vio": 8434,
+      "n95": 95,
+      "n99": 95,
+      "vioAt99": 19,
+      "coverage": null
+     },
+     {
+      "seed": 5,
+      "budget": 42212,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 9304,
+      "n95": 312,
+      "n99": 362,
+      "vioAt99": 78,
+      "coverage": null
+     }
+    ],
+    "SA": [
+     {
+      "seed": 1,
+      "budget": 37756,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 271,
+      "n95": 993,
+      "n99": 1170,
+      "vioAt99": 77,
+      "coverage": null
+     },
+     {
+      "seed": 2,
+      "budget": 38456,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 408,
+      "n95": 2814,
+      "n99": 2819,
+      "vioAt99": 395,
+      "coverage": null
+     },
+     {
+      "seed": 3,
+      "budget": 37612,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 530,
+      "n95": 10,
+      "n99": 10,
+      "vioAt99": 0,
+      "coverage": null
+     },
+     {
+      "seed": 4,
+      "budget": 37651,
+      "best": 1,
+      "firstEval": 3,
+      "vio": 206,
+      "n95": 676,
+      "n99": 677,
+      "vioAt99": 38,
+      "coverage": null
+     },
+     {
+      "seed": 5,
+      "budget": 42212,
+      "best": 0.7385,
+      "firstEval": 1,
+      "vio": 838,
+      "n95": -1,
+      "n99": -1,
+      "vioAt99": 0,
+      "coverage": null
+     }
+    ],
+    "COA-T": [
+     {
+      "seed": 1,
+      "budget": 37756,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 6775,
+      "n95": 47,
+      "n99": 47,
+      "vioAt99": 14,
+      "coverage": null
+     },
+     {
+      "seed": 2,
+      "budget": 38456,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 6594,
+      "n95": 1655,
+      "n99": 1844,
+      "vioAt99": 587,
+      "coverage": null
+     },
+     {
+      "seed": 3,
+      "budget": 37612,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 6493,
+      "n95": 49,
+      "n99": 49,
+      "vioAt99": 9,
+      "coverage": null
+     },
+     {
+      "seed": 4,
+      "budget": 37651,
+      "best": 1,
+      "firstEval": 4,
+      "vio": 6519,
+      "n95": 105,
+      "n99": 362,
+      "vioAt99": 84,
+      "coverage": null
+     },
+     {
+      "seed": 5,
+      "budget": 42212,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 6967,
+      "n95": 13,
+      "n99": 168,
+      "vioAt99": 46,
+      "coverage": null
+     }
+    ],
+    "SP-EA": [
+     {
+      "seed": 1,
+      "budget": 37756,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 1035,
+      "n95": 66,
+      "n99": 84,
+      "vioAt99": 18,
+      "coverage": null
+     },
+     {
+      "seed": 2,
+      "budget": 38456,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 1427,
+      "n95": 407,
+      "n99": 787,
+      "vioAt99": 173,
+      "coverage": null
+     },
+     {
+      "seed": 3,
+      "budget": 37612,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 1040,
+      "n95": 131,
+      "n99": 131,
+      "vioAt99": 21,
+      "coverage": null
+     },
+     {
+      "seed": 4,
+      "budget": 37651,
+      "best": 1,
+      "firstEval": 2,
+      "vio": 1519,
+      "n95": 142,
+      "n99": 142,
+      "vioAt99": 35,
+      "coverage": null
+     },
+     {
+      "seed": 5,
+      "budget": 42212,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 2849,
+      "n95": 83,
+      "n99": 131,
+      "vioAt99": 32,
+      "coverage": null
+     }
+    ]
+   },
+   "gmax": 1
+  },
+  {
+   "name": "P4-extreme",
+   "params": {
+    "lambdaE": 0.15,
+    "risk": 0.9,
+    "complexity": 0.85,
+    "stress": 0.9
+   },
+   "methods": {
+    "LRLS": [
+     {
+      "seed": 1,
+      "budget": 39048,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 4718,
+      "n95": 248,
+      "n99": 248,
+      "vioAt99": 0,
+      "coverage": 0.9711
+     },
+     {
+      "seed": 2,
+      "budget": 36251,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 5813,
+      "n95": 248,
+      "n99": 248,
+      "vioAt99": 0,
+      "coverage": 0.969
+     },
+     {
+      "seed": 3,
+      "budget": 36325,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 8175,
+      "n95": 248,
+      "n99": 248,
+      "vioAt99": 0,
+      "coverage": 0.9587
+     },
+     {
+      "seed": 4,
+      "budget": 37049,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 7088,
+      "n95": 248,
+      "n99": 248,
+      "vioAt99": 0,
+      "coverage": 0.9793
+     },
+     {
+      "seed": 5,
+      "budget": 42041,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 3735,
+      "n95": 248,
+      "n99": 248,
+      "vioAt99": 0,
+      "coverage": 0.9669
+     }
+    ],
+    "RS": [
+     {
+      "seed": 1,
+      "budget": 39048,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 13599,
+      "n95": 112,
+      "n99": 209,
+      "vioAt99": 71,
+      "coverage": null
+     },
+     {
+      "seed": 2,
+      "budget": 36251,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 12574,
+      "n95": 224,
+      "n99": 224,
+      "vioAt99": 87,
+      "coverage": null
+     },
+     {
+      "seed": 3,
+      "budget": 36325,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 12586,
+      "n95": 74,
+      "n99": 74,
+      "vioAt99": 30,
+      "coverage": null
+     },
+     {
+      "seed": 4,
+      "budget": 37049,
+      "best": 1,
+      "firstEval": 2,
+      "vio": 13032,
+      "n95": 95,
+      "n99": 95,
+      "vioAt99": 34,
+      "coverage": null
+     },
+     {
+      "seed": 5,
+      "budget": 42041,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 14606,
+      "n95": 312,
+      "n99": 362,
+      "vioAt99": 124,
+      "coverage": null
+     }
+    ],
+    "SA": [
+     {
+      "seed": 1,
+      "budget": 39048,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 1197,
+      "n95": 1608,
+      "n99": 1608,
+      "vioAt99": 268,
+      "coverage": null
+     },
+     {
+      "seed": 2,
+      "budget": 36251,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 756,
+      "n95": 2732,
+      "n99": 2747,
+      "vioAt99": 725,
+      "coverage": null
+     },
+     {
+      "seed": 3,
+      "budget": 36325,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 1621,
+      "n95": 10,
+      "n99": 10,
+      "vioAt99": 0,
+      "coverage": null
+     },
+     {
+      "seed": 4,
+      "budget": 37049,
+      "best": 1,
+      "firstEval": 3,
+      "vio": 888,
+      "n95": 676,
+      "n99": 677,
+      "vioAt99": 67,
+      "coverage": null
+     },
+     {
+      "seed": 5,
+      "budget": 42041,
+      "best": 0.7385,
+      "firstEval": 1,
+      "vio": 1197,
+      "n95": -1,
+      "n99": -1,
+      "vioAt99": 0,
+      "coverage": null
+     }
+    ],
+    "COA-T": [
+     {
+      "seed": 1,
+      "budget": 39048,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 8461,
+      "n95": 47,
+      "n99": 47,
+      "vioAt99": 18,
+      "coverage": null
+     },
+     {
+      "seed": 2,
+      "budget": 36251,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 7529,
+      "n95": 111,
+      "n99": 163,
+      "vioAt99": 52,
+      "coverage": null
+     },
+     {
+      "seed": 3,
+      "budget": 36325,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 7540,
+      "n95": 49,
+      "n99": 49,
+      "vioAt99": 13,
+      "coverage": null
+     },
+     {
+      "seed": 4,
+      "budget": 37049,
+      "best": 1,
+      "firstEval": 4,
+      "vio": 7648,
+      "n95": 478,
+      "n99": 683,
+      "vioAt99": 257,
+      "coverage": null
+     },
+     {
+      "seed": 5,
+      "budget": 42041,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 9100,
+      "n95": 13,
+      "n99": 929,
+      "vioAt99": 333,
+      "coverage": null
+     }
+    ],
+    "SP-EA": [
+     {
+      "seed": 1,
+      "budget": 39048,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 1540,
+      "n95": 66,
+      "n99": 84,
+      "vioAt99": 28,
+      "coverage": null
+     },
+     {
+      "seed": 2,
+      "budget": 36251,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 1828,
+      "n95": 55,
+      "n99": 55,
+      "vioAt99": 19,
+      "coverage": null
+     },
+     {
+      "seed": 3,
+      "budget": 36325,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 1366,
+      "n95": 131,
+      "n99": 131,
+      "vioAt99": 31,
+      "coverage": null
+     },
+     {
+      "seed": 4,
+      "budget": 37049,
+      "best": 1,
+      "firstEval": 2,
+      "vio": 2118,
+      "n95": 240,
+      "n99": 274,
+      "vioAt99": 81,
+      "coverage": null
+     },
+     {
+      "seed": 5,
+      "budget": 42041,
+      "best": 1,
+      "firstEval": 1,
+      "vio": 1552,
+      "n95": 148,
+      "n99": 353,
+      "vioAt99": 88,
+      "coverage": null
+     }
+    ]
+   },
+   "gmax": 1
+  }
+ ],
+ "seeds": [
+  1,
+  2,
+  3,
+  4,
+  5
+ ],
+ "feasibilityGate": 0.35,
+ "summary": [
+  {
+   "name": "P1-mild",
+   "gmax": 1,
+   "methods": {
+    "LRLS": {
+     "best": {
+      "mean": 1,
+      "sd": 0
+     },
+     "vio": {
+      "mean": 457,
+      "sd": 399.6523
+     },
+     "n95": {
+      "mean": 327,
+      "sd": 0
+     },
+     "n99": {
+      "mean": 327,
+      "sd": 0
+     },
+     "vioAt99": {
+      "mean": 0,
+      "sd": 0
+     },
+     "hit95": 5,
+     "hit99": 5,
+     "coverage": {
+      "mean": 0.974,
+      "sd": 0.0257
+     }
+    },
+    "RS": {
+     "best": {
+      "mean": 1,
+      "sd": 0
+     },
+     "vio": {
+      "mean": 3323.6,
+      "sd": 175.8616
+     },
+     "n95": {
+      "mean": 163.4,
+      "sd": 101.3252
+     },
+     "n99": {
+      "mean": 192.8,
+      "sd": 115.6966
+     },
+     "vioAt99": {
+      "mean": 16.2,
+      "sd": 13.1034
+     },
+     "hit95": 5,
+     "hit99": 5,
+     "coverage": {
+      "mean": null,
+      "sd": 0
+     }
+    },
+    "SA": {
+     "best": {
+      "mean": 0.9477,
+      "sd": 0.1169
+     },
+     "vio": {
+      "mean": 184.8,
+      "sd": 45.472
+     },
+     "n95": {
+      "mean": 1109.75,
+      "sd": 764.7284
+     },
+     "n99": {
+      "mean": 1114.75,
+      "sd": 767.7084
+     },
+     "vioAt99": {
+      "mean": 93.75,
+      "sd": 80.2927
+     },
+     "hit95": 4,
+     "hit99": 4,
+     "coverage": {
+      "mean": null,
+      "sd": 0
+     }
+    },
+    "COA-T": {
+     "best": {
+      "mean": 1,
+      "sd": 0
+     },
+     "vio": {
+      "mean": 4664.2,
+      "sd": 403.9
+     },
+     "n95": {
+      "mean": 1904.2,
+      "sd": 4138.4225
+     },
+     "n99": {
+      "mean": 1986.6,
+      "sd": 4094.2407
+     },
+     "vioAt99": {
+      "mean": 455.8,
+      "sd": 960.7818
+     },
+     "hit95": 5,
+     "hit99": 5,
+     "coverage": {
+      "mean": null,
+      "sd": 0
+     }
+    },
+    "SP-EA": {
+     "best": {
+      "mean": 1,
+      "sd": 0
+     },
+     "vio": {
+      "mean": 713.4,
+      "sd": 38.227
+     },
+     "n95": {
+      "mean": 101.2,
+      "sd": 51.9538
+     },
+     "n99": {
+      "mean": 110.8,
+      "sd": 52.1843
+     },
+     "vioAt99": {
+      "mean": 16.2,
+      "sd": 7.7266
+     },
+     "hit95": 5,
+     "hit99": 5,
+     "coverage": {
+      "mean": null,
+      "sd": 0
+     }
+    }
+   }
+  },
+  {
+   "name": "P2-baseline",
+   "gmax": 1,
+   "methods": {
+    "LRLS": {
+     "best": {
+      "mean": 1,
+      "sd": 0
+     },
+     "vio": {
+      "mean": 1800.4,
+      "sd": 434.0378
+     },
+     "n95": {
+      "mean": 323,
+      "sd": 0
+     },
+     "n99": {
+      "mean": 323,
+      "sd": 0
+     },
+     "vioAt99": {
+      "mean": 0,
+      "sd": 0
+     },
+     "hit95": 5,
+     "hit99": 5,
+     "coverage": {
+      "mean": 0.9731,
+      "sd": 0.0156
+     }
+    },
+    "RS": {
+     "best": {
+      "mean": 1,
+      "sd": 0
+     },
+     "vio": {
+      "mean": 5967.6,
+      "sd": 162.1552
+     },
+     "n95": {
+      "mean": 163.4,
+      "sd": 101.3252
+     },
+     "n99": {
+      "mean": 192.8,
+      "sd": 115.6966
+     },
+     "vioAt99": {
+      "mean": 28.6,
+      "sd": 20.6833
+     },
+     "hit95": 5,
+     "hit99": 5,
+     "coverage": {
+      "mean": null,
+      "sd": 0
+     }
+    },
+    "SA": {
+     "best": {
+      "mean": 0.8954,
+      "sd": 0.1432
+     },
+     "vio": {
+      "mean": 452.6,
+      "sd": 172.1534
+     },
+     "n95": {
+      "mean": 559.6667,
+      "sd": 501.7194
+     },
+     "n99": {
+      "mean": 1005,
+      "sd": 1193.3017
+     },
+     "vioAt99": {
+      "mean": 80.3333,
+      "sd": 126.3738
+     },
+     "hit95": 3,
+     "hit99": 3,
+     "coverage": {
+      "mean": null,
+      "sd": 0
+     }
+    },
+    "COA-T": {
+     "best": {
+      "mean": 1,
+      "sd": 0
+     },
+     "vio": {
+      "mean": 5843.4,
+      "sd": 126.1777
+     },
+     "n95": {
+      "mean": 373.8,
+      "sd": 716.9722
+     },
+     "n99": {
+      "mean": 494,
+      "sd": 765.5119
+     },
+     "vioAt99": {
+      "mean": 134.4,
+      "sd": 228.9428
+     },
+     "hit95": 5,
+     "hit99": 5,
+     "coverage": {
+      "mean": null,
+      "sd": 0
+     }
+    },
+    "SP-EA": {
+     "best": {
+      "mean": 1,
+      "sd": 0
+     },
+     "vio": {
+      "mean": 1251.6,
+      "sd": 656.4204
+     },
+     "n95": {
+      "mean": 165.8,
+      "sd": 138.5377
+     },
+     "n99": {
+      "mean": 255,
+      "sd": 298.239
+     },
+     "vioAt99": {
+      "mean": 44.2,
+      "sd": 53.3919
+     },
+     "hit95": 5,
+     "hit99": 5,
+     "coverage": {
+      "mean": null,
+      "sd": 0
+     }
+    }
+   }
+  },
+  {
+   "name": "P3-highrisk",
+   "gmax": 1,
+   "methods": {
+    "LRLS": {
+     "best": {
+      "mean": 1,
+      "sd": 0
+     },
+     "vio": {
+      "mean": 2710,
+      "sd": 560.7339
+     },
+     "n95": {
+      "mean": 302,
+      "sd": 0
+     },
+     "n99": {
+      "mean": 302,
+      "sd": 0
+     },
+     "vioAt99": {
+      "mean": 0,
+      "sd": 0
+     },
+     "hit95": 5,
+     "hit99": 5,
+     "coverage": {
+      "mean": 0.9719,
+      "sd": 0.0117
+     }
+    },
+    "RS": {
+     "best": {
+      "mean": 1,
+      "sd": 0
+     },
+     "vio": {
+      "mean": 8544.6,
+      "sd": 439.0618
+     },
+     "n95": {
+      "mean": 163.4,
+      "sd": 101.3252
+     },
+     "n99": {
+      "mean": 192.8,
+      "sd": 115.6966
+     },
+     "vioAt99": {
+      "mean": 42,
+      "sd": 25.9904
+     },
+     "hit95": 5,
+     "hit99": 5,
+     "coverage": {
+      "mean": null,
+      "sd": 0
+     }
+    },
+    "SA": {
+     "best": {
+      "mean": 0.9477,
+      "sd": 0.1169
+     },
+     "vio": {
+      "mean": 450.6,
+      "sd": 250.1416
+     },
+     "n95": {
+      "mean": 1123.25,
+      "sd": 1199.2996
+     },
+     "n99": {
+      "mean": 1169,
+      "sd": 1198.3108
+     },
+     "vioAt99": {
+      "mean": 127.5,
+      "sd": 181.0829
+     },
+     "hit95": 4,
+     "hit99": 4,
+     "coverage": {
+      "mean": null,
+      "sd": 0
+     }
+    },
+    "COA-T": {
+     "best": {
+      "mean": 1,
+      "sd": 0
+     },
+     "vio": {
+      "mean": 6669.6,
+      "sd": 199.4613
+     },
+     "n95": {
+      "mean": 373.8,
+      "sd": 716.9722
+     },
+     "n99": {
+      "mean": 494,
+      "sd": 765.5119
+     },
+     "vioAt99": {
+      "mean": 148,
+      "sd": 247.2337
+     },
+     "hit95": 5,
+     "hit99": 5,
+     "coverage": {
+      "mean": null,
+      "sd": 0
+     }
+    },
+    "SP-EA": {
+     "best": {
+      "mean": 1,
+      "sd": 0
+     },
+     "vio": {
+      "mean": 1574,
+      "sd": 745.9786
+     },
+     "n95": {
+      "mean": 165.8,
+      "sd": 138.5377
+     },
+     "n99": {
+      "mean": 255,
+      "sd": 298.239
+     },
+     "vioAt99": {
+      "mean": 55.8,
+      "sd": 65.9068
+     },
+     "hit95": 5,
+     "hit99": 5,
+     "coverage": {
+      "mean": null,
+      "sd": 0
+     }
+    }
+   }
+  },
+  {
+   "name": "P4-extreme",
+   "gmax": 1,
+   "methods": {
+    "LRLS": {
+     "best": {
+      "mean": 1,
+      "sd": 0
+     },
+     "vio": {
+      "mean": 5905.8,
+      "sd": 1780.3594
+     },
+     "n95": {
+      "mean": 248,
+      "sd": 0
+     },
+     "n99": {
+      "mean": 248,
+      "sd": 0
+     },
+     "vioAt99": {
+      "mean": 0,
+      "sd": 0
+     },
+     "hit95": 5,
+     "hit99": 5,
+     "coverage": {
+      "mean": 0.969,
+      "sd": 0.0074
+     }
+    },
+    "RS": {
+     "best": {
+      "mean": 1,
+      "sd": 0
+     },
+     "vio": {
+      "mean": 13279.4,
+      "sd": 851.7058
+     },
+     "n95": {
+      "mean": 163.4,
+      "sd": 101.3252
+     },
+     "n99": {
+      "mean": 192.8,
+      "sd": 115.6966
+     },
+     "vioAt99": {
+      "mean": 69.2,
+      "sd": 39.0474
+     },
+     "hit95": 5,
+     "hit99": 5,
+     "coverage": {
+      "mean": null,
+      "sd": 0
+     }
+    },
+    "SA": {
+     "best": {
+      "mean": 0.9477,
+      "sd": 0.1169
+     },
+     "vio": {
+      "mean": 1131.8,
+      "sd": 334.8443
+     },
+     "n95": {
+      "mean": 1256.5,
+      "sd": 1182.0032
+     },
+     "n99": {
+      "mean": 1260.5,
+      "sd": 1188.0882
+     },
+     "vioAt99": {
+      "mean": 265,
+      "sd": 327.1279
+     },
+     "hit95": 4,
+     "hit99": 4,
+     "coverage": {
+      "mean": null,
+      "sd": 0
+     }
+    },
+    "COA-T": {
+     "best": {
+      "mean": 1,
+      "sd": 0
+     },
+     "vio": {
+      "mean": 8055.6,
+      "sd": 700.7869
+     },
+     "n95": {
+      "mean": 139.6,
+      "sd": 192.4469
+     },
+     "n99": {
+      "mean": 374.2,
+      "sd": 406.3806
+     },
+     "vioAt99": {
+      "mean": 134.6,
+      "sd": 149.6239
+     },
+     "hit95": 5,
+     "hit99": 5,
+     "coverage": {
+      "mean": null,
+      "sd": 0
+     }
+    },
+    "SP-EA": {
+     "best": {
+      "mean": 1,
+      "sd": 0
+     },
+     "vio": {
+      "mean": 1680.8,
+      "sd": 295.0952
+     },
+     "n95": {
+      "mean": 128,
+      "sd": 74.3741
+     },
+     "n99": {
+      "mean": 179.4,
+      "sd": 128.4574
+     },
+     "vioAt99": {
+      "mean": 49.4,
+      "sd": 32.4392
+     },
+     "hit95": 5,
+     "hit99": 5,
+     "coverage": {
+      "mean": null,
+      "sd": 0
+     }
+    }
+   }
+  }
+ ]
+}
