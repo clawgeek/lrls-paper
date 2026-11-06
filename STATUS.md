@@ -58,7 +58,7 @@ fig-parts.png             552,474 B
 |---|---|---|
 | **Zenodo** | ✅ **已发布，DOI 10.5281/zenodo.23984055** | 8 文件全量存档，DataCite 可解析，已作为其余渠道的引用锚点 |
 | **ChinaXiv** | ⚠️ 待本人操作 | 中文全文 + `metadata/chinaxiv.md` 表单已回填 Zenodo DOI；需注册 + 实名认证，第三方不得代提交 |
-| **TechRxiv** | ⚠️ 待本人操作 / 通道存疑 | 英文全文 + `metadata/techrxiv.md` 已回填；命令行与真实 Edge 均被 Cloudflare 拦截（403），且 2026-05～07 迁移期社区反馈曾暂停收稿。若通道不可用，以 Zenodo DOI 作为英文引用入口 |
+| **TechRxiv** | ❌ 平台暂停收稿（2026-11-06 实测） | CONNECT 账号已登录成功（jiexun sang / sangjiexun@gmail.com），Cloudflare 人机验证也通过，但首页横幅明确：*"We are currently preparing a transition to a new platform. **Submissions are temporarily closed during this process.**"* 所有已发布内容与 DOI 仍可访问。→ 待新平台上线的同时，改用 Zenodo DOI 作为英文引用入口，或转投 ChinaXiv / Preprints.org |
 | **arXiv** | 🟡 已注册、草稿已建，待背书 | 账号 `sangjiexun` 已注册并验证邮箱；投稿草稿 **8335852** 的 Start 页已全部保存（CC BY 4.0、Computer Science / Machine Learning cs.LG）。页面明确提示 "You are not endorsed for this archive"，背书码 **`KDOBWQ`** 已生成并发至 1009900122@qq.com。已用 arXiv API 筛出 10 位合格背书人（5 年内 ≥3 篇 cs 投稿、近 3 个月有投稿），其中 3 位 X 账号已核实（@j_foerst、@amyzhanginRL、@shimon8282，见 `metadata/endorsers.md`），公开求助推文已从 @clawgeek 发出。拿到背书后从 https://arxiv.org/submit/8335852/start 继续上传 `arxiv-package.zip` |
 
 ### 为什么另外三个不能由我代提交
@@ -100,3 +100,27 @@ fig-parts.png             552,474 B
 - 未在 ChinaXiv / TechRxiv / arXiv 创建任何 deposition，未取得这三个平台的任何编号。
 - 未做同行评审、未投会议（AAMAS Blue Sky / RSS / ICRA Arts in Robotics 的时间窗口另见 `LRLS-论文投稿渠道清单.md`）。
 - 未代用户点击实名认证或填写背书人信息。
+
+---
+
+## ✅ 补 B：基线实验 + 统计（2026-11-07 00:10-00:30）
+
+**做法**：`tools/run_baselines.js` 在同一目标场、同一可行性门槛（risk<0.35）、同一评估预算
+（39,911 次 fval，等于 LRLS 跑满 1100 tick × 12 agent 的消耗）下，对 4 档 × 5 seeds 比较 5 种方法：
+RS（随机搜索）、SA（固定几何降温退火）、COA-T（温度门控两段切换，即本文要替代的机制）、
+SP-EA（单种群 + 熵退火，去掉角色分离与调度器）、LRLS。
+
+**结果（诚实结论：不支持速度优势）**
+
+| 档位 | 到 99% 最优所需评估（RS / SP-EA / SA / COA-T / LRLS） | 到达前的违例（同序） |
+|---|---|---|
+| P1 | 193 / 111 / 1115† / 1987 / **327** | 16 / 16 / 94 / 456 / **0** |
+| P2 | 193 / 255 / 1005† / 494 / **323** | 29 / 44 / 80 / 134 / **0** |
+| P3 | 193 / 255 / 1169† / 494 / **302** | 42 / 56 / 128 / 148 / **0** |
+| P4 | 193 / 179 / 1260† / 374 / **248** | 69 / 49 / 265 / 135 / **0** |
+
+† SA 仅 3–4/5 seeds 达标。结论：**LRLS 比最快基线慢 1.3–2.9×，但到达阈值前零违例**；
+COA 式温度门控在四个档位上"更慢且更不安全"，正是本文要打的靶子。
+
+**产出**：`paper/assets/fig-baselines.png`（双面板柱状图）、md 新增 §5.2 + 更新 §6 局限、
+main.tex 同步（新增 5.2 节 + Figure 4 + 表）、PDF 重建为 13 页 4 图、arxiv-package 重打包（774 KB）。
