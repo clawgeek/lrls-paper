@@ -10,7 +10,7 @@ Preprint version 1.0 — 5 November 2026
 
 ## Abstract
 
-We present LRLS (Lobster RL Specification), a formal specification for constrained optimisation in which the classical exploration–exploitation trade-off is *role-separated* into two heterogeneous agent populations plus a scheduler. A high-entropy *crayfish* population generates coarse candidate habitats ("mud caves"); a low-entropy, constraint-aware *Boston lobster* population promotes candidates into verified feasible solutions ("reef gaps") via local refinement and constraint projection; a scheduler allocates population budgets, dispatches tasks and triggers global resampling. The specification fixes the state decomposition, six action primitives, a single reward structure $r = r_{obj} - \lambda_v C_v + \lambda_e H - \lambda_m C_m$, a shared memory-pool schema, a four-stage training pipeline, seven mandatory reported metrics and a safety layer. We additionally describe v1.1 *RoboZero*, which maps the agents onto a heterogeneous robot fleet with a geometric embedding space, gossip-synchronised memory, multi-robot consensus voting and zero-shot transfer routes. To make the specification executable, we release a dependency-free deterministic reference simulation (single HTML file, 1100 ticks, 22x22 reward terrain, 12 agents) and report illustrative single-run behaviour across four difficulty settings. **This is a specification and a reference implementation, not a claim of algorithmic superiority.** No learned policy, no multi-seed statistics, no baseline comparison and no physical-robot experiment are reported here; Section 6 states these limitations explicitly. The aim is to give the central hypothesis — that a *learned* switching scheduler outperforms fixed temperature or entropy annealing — a precise, reproducible target that can subsequently be falsified.
+We present LRLS (Lobster RL Specification), a formal specification for constrained optimisation in which the classical exploration–exploitation trade-off is *role-separated* into two heterogeneous agent populations plus a scheduler. A high-entropy *crayfish* population generates coarse candidate habitats ("mud caves"); a low-entropy, constraint-aware *Boston lobster* population promotes candidates into verified feasible solutions ("reef gaps") via local refinement and constraint projection; a scheduler allocates population budgets, dispatches tasks and triggers global resampling. The specification fixes the state decomposition, six action primitives, a single reward structure $r = r_{obj} - \lambda_v C_v + \lambda_e H - \lambda_m C_m$, a shared memory-pool schema, a four-stage training pipeline, seven mandatory reported metrics and a safety layer. We additionally describe v1.1 *RoboZero*, which maps the agents onto a heterogeneous robot fleet with a geometric embedding space, gossip-synchronised memory, multi-robot consensus voting and zero-shot transfer routes. To make the specification executable, we release a dependency-free deterministic reference simulation (single HTML file, 1100 ticks, 22x22 reward terrain, 12 agents) and report a five-seed, budget-matched comparison against four baselines on four difficulty settings. The comparison does **not** support a speed claim: random search and a single-pool ablation reach 99% of the optimum 1.3-2.9x faster than LRLS. What role separation buys is constraint safety on the path — LRLS reaches the threshold with zero hazard-zone evaluations in every run, while every baseline pays 16-456 violations to get there, and COA-style temperature gating is worse on both axes. **This is a specification and a reference implementation, not a claim of algorithmic superiority.** No learned scheduling policy and no physical-robot experiment are reported here; Section 6 states the remaining limitations explicitly. The aim is to give the central hypothesis — that a *learned* switching scheduler outperforms fixed temperature or entropy annealing — a precise, reproducible target that can subsequently be falsified.
 
 **Keywords:** reinforcement learning specification; exploration–exploitation; multi-agent systems; constrained optimisation; heterogeneous robots; zero-shot transfer; crayfish optimisation algorithm
 
@@ -157,9 +157,11 @@ Reproducibility: a seeded deterministic PRNG, URL state parameters (`?t=680&part
 
 ---
 
-## 5. Illustrative Results
+## 5. Results
 
-Four operating profiles (parameter tuples of the same deterministic solver, fixed seed) were run end-to-end. These are **single-run illustrations of solver behaviour, not a statistical evaluation**; no learned policy is involved, and no baseline is compared.
+### 5.1 Single-run behaviour across difficulty settings
+
+Four operating profiles (parameter tuples of the same deterministic solver, fixed seed) were run end-to-end. These single runs illustrate solver behaviour; Section 5.2 adds a five-seed, budget-matched comparison against four baselines.
 
 | Setting | $\lambda_e$ / risk / complexity / stress | Best feasible | Reef gaps | Violation events | First solution (tick) | REPORT closed (tick) |
 |---|---|---|---|---|---|---|
@@ -172,15 +174,44 @@ Four operating profiles (parameter tuples of the same deterministic solver, fixe
 
 ![**Figure 3.** Baseline run (P2) at $t = 1100$. (a) Synthetic objective field $f(x,z)$ with hard-constraint hazard zones (hatched); the star marks the run's global optimum $f^\ast$, circles mark sub-optima and decoys. (b) Agent footprint: explorer samples (light dots) cover the domain; refiner samples concentrate on candidate habitats; green squares are consensus-verified reef gaps.](assets/fig-field.png)
 
-Two observations are legitimate at this level of evidence: (a) the pipeline closes in all four settings, i.e. the specification is internally executable; (b) difficulty is not cosmetic — moving from P1 to P4 multiplies the cumulative violation-event count from 0 to 51,849 and delays `REPORT` closure from tick 191 to 415, while the first feasible solution appears at the same tick (63) because the explorer's initial sweep is largely insensitive to the risk scaling. Difficulty therefore manifests in **verification and closure cost**, not in discovery latency. **No claim of improvement over COA, fixed-temperature annealing, PPO, MAPPO or any other baseline is made.** Note also that the objective surface is synthetic and normalised, so "1.000" means "the solver's own known optimum was found", not a benchmark score.
+Two observations hold at this level of evidence: (a) the pipeline closes in all four settings, i.e. the specification is internally executable; (b) difficulty is not cosmetic — moving from P1 to P4 multiplies the cumulative violation-event count from 0 to 51,849 and delays `REPORT` closure from tick 191 to 415, while the first feasible solution appears at the same tick (63) because the explorer's initial sweep is largely insensitive to the risk scaling. Difficulty therefore manifests in **verification and closure cost**, not in discovery latency.
+
+### 5.2 Budget-matched comparison against baselines
+
+We compare the reference solver against four alternatives on the **same objective field, the same feasibility gate** ($\mathrm{risk}(x,z) < 0.35$, the same test used to define $f^\ast$) and the **same evaluation budget**. Every method receives 39,911 objective evaluations per run — exactly the number the LRLS solver consumes in 1,100 ticks with 12 agents — and each configuration is repeated over **five seeds** (mean ± s.d. reported).
+
+*Baselines.* **RS**: uniform random search, keeping the best feasible sample. **SA**: simulated annealing with a fixed geometric cooling schedule $T_0{=}0.30 \to T_1{=}10^{-3}$, Gaussian proposal, Metropolis acceptance — the standard "fixed temperature" control. **COA-T**: a temperature-gated two-phase switch in the style of the Crayfish Optimization Algorithm — large jump steps while $T > T^\ast$, small local steps below — i.e. exactly the mechanism this specification replaces with an agent. **SP-EA**: a single population of 12 agents with a globally annealed entropy coefficient and no role separation and no scheduler (an ablation of the architectural claim).
+
+Two metrics matter, and they pull in opposite directions: **evaluations to reach 99% of the best feasible value**, and **constraint violations accumulated before that point**.
+
+| Profile | Metric | RS | SP-EA | SA | COA-T | **LRLS** |
+|---|---|---|---|---|---|---|
+| P1 mild | eval@99% | 193 | **111** | 1115 † | 1987 | 327 |
+| | violations@99% | 16 | 16 | 94 | 456 | **0** |
+| P2 baseline | eval@99% | 193 | 255 | 1005 † | 494 | 323 |
+| | violations@99% | 29 | 44 | 80 | 134 | **0** |
+| P3 high-risk | eval@99% | 193 | 255 | 1169 † | 494 | 302 |
+| | violations@99% | 42 | 56 | 128 | 148 | **0** |
+| P4 extreme | eval@99% | 193 | 179 | 1260 † | 374 | 248 |
+| | violations@99% | 69 | 49 | 265 | 135 | **0** |
+
+† SA reached the threshold in only 3–4 of 5 seeds; the mean is over successful runs.
+
+![**Figure 4.** Budget-matched comparison over five seeds. (a) Evaluations required to reach 99% of the best feasible value (log scale). (b) Constraint violations accumulated before that threshold. LRLS is *not* the fastest method; it is the only one that reaches the threshold with zero violations.](assets/fig-baselines.png)
+
+**The result does not support a speed claim, and we do not make one.** Random search and the single-pool ablation reach 99% in 111–255 evaluations, i.e. **1.3–2.9× faster than LRLS** (248–327). What role separation buys is **constraint safety on the path**: LRLS reaches the 99% threshold with **zero** evaluations inside a hazard zone in every profile and every seed, whereas every baseline pays 16–456 violations to get there. COA-style temperature gating is both slower *and* less safe than LRLS in all four profiles, which is the specific comparison this specification was designed to make. SA is dominated on both axes: slowest, and it fails to reach the threshold in 1–2 of 5 seeds.
+
+The mechanism is visible in the reference implementation: explorers are permitted to sample hazard zones (the exploration signal must not be biased), but a candidate is only promoted to a reef gap after the refiner's bounded constraint projection succeeds, and the scheduler never assigns high-risk regions to refiners (Section 3.8). Violations therefore accumulate *after* a feasible optimum has been secured, rather than before it — which is precisely the ordering a safety layer is supposed to produce.
+
+**What this does and does not establish.** It establishes that, on a synthetic constrained surface with a fixed evaluation budget, role separation trades 1.3–2.9× sample efficiency for zero-violation convergence, and that the temperature-gated alternative is worse on both axes. It does **not** establish superiority over learned schedulers (SAC/PPO/MAPPO), over COA itself on unconstrained benchmark suites, or on any real robot. Five seeds is enough for a mean and a standard deviation; it is not enough for significance testing, and we make no such test.
 
 ---
 
 ## 6. Limitations
 
 1. **The central hypothesis is untested.** The scheduler in the reference implementation is a rule-based warm start. Whether a *learned* scheduler beats fixed temperature / entropy annealing is exactly the question this specification is meant to enable, and no experiment here answers it.
-2. **No statistical evidence.** One deterministic run per setting; no multiple seeds, no mean ± standard deviation, no significance tests, no confidence intervals.
-3. **No baselines.** COA, fixed-schedule SAC/PPO, random search and MAPPO are not compared.
+2. **Statistics are descriptive only.** Five seeds per configuration support a mean and a standard deviation; no significance test, no confidence interval and no effect-size analysis is reported, and five seeds cannot establish an ordering under noise.
+3. **The baselines are deliberately simple.** Random search, fixed-schedule annealing, a COA-style temperature gate and a single-pool entropy-annealing ablation are compared on one synthetic surface. SAC, PPO, MAPPO and COA itself on standard benchmark suites are **not** compared, and the zero-violation result is a property of this constraint encoding (hazard zones with a hard gate), not a general guarantee.
 4. **No real embodiment.** The v1.1 fleet is a design; terrain is a synthetic 2D function, not a physics simulator or robot hardware. Gossip delay, packet loss and actuator noise are not simulated.
 5. **Metaphor is not evidence.** The Xunzi reading is a deliberate semantic inversion used as a naming and narrative device. It supplies no behavioural prior and should not be cited as biological grounding.
 6. **"Zero-shot" is used in the transfer sense.** A pre-trained encoder remains necessary; this is domain generalisation, not zero-shot learning over unseen task semantics.
