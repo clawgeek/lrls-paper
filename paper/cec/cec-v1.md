@@ -1,6 +1,6 @@
 # LRLS: Role-Separated Exploration and Exploitation with a Scheduling Agent for Constrained Optimisation
 
-**Jason Sang** — Independent Researcher — sangjiexun@outlook.com
+**Jason Sang (Sang Jiexun)** — Independent Researcher — sangjeixun@gmail.com
 
 ## Abstract
 
@@ -10,9 +10,9 @@ Metaheuristics that alternate between exploration and exploitation usually make 
 
 ## 1. Introduction
 
-Exploration–exploitation balancing is usually implemented as a schedule. Simulated annealing cools a temperature; maximum-entropy RL anneals a coefficient; bio-inspired optimisers gate between phases with a threshold. The schedule itself is a hyperparameter, tuned by hand, and it is the component that decides how much of the budget is spent looking versus confirming.
+Exploration–exploitation balancing is usually implemented as a schedule [2]. Simulated annealing cools a temperature [3]; maximum-entropy RL anneals a coefficient [4]; bio-inspired optimisers gate between phases with a threshold. The schedule itself is a hyperparameter, tuned by hand, and it is the component that decides how much of the budget is spent looking versus confirming.
 
-The **Crayfish Optimization Algorithm (COA)** is a clear example: it models summer-resort/competition/foraging behaviour and switches phases with a **temperature threshold**. COA is a genuine metaheuristic and already performs a fixed trade-off. LRLS is not a competitor to COA as an optimiser; it asks a narrower question: *what changes if the switching mechanism is not a threshold but an agent?*
+The **Crayfish Optimization Algorithm (COA)** [1] is a clear example: it models summer-resort/competition/foraging behaviour and switches phases with a **temperature threshold**. COA is a genuine metaheuristic and already performs a fixed trade-off. LRLS is not a competitor to COA as an optimiser; it asks a narrower question: *what changes if the switching mechanism is not a threshold but an agent?*
 
 Our answer is structural rather than scalar. Two populations are made heterogeneous in observation and in action — not merely differently weighted — and a third controller decides, from global state, when to move budget from discovery to verification. The division of labour is bound to an explicit memory schema, a fixed action vocabulary and a hard-constraint safety layer, so the object is an implementable specification rather than a diagram.
 
@@ -35,7 +35,7 @@ Our answer is structural rather than scalar. Two populations are made heterogene
 
 ### 3.1 Problem statement
 
-Let $\Omega \subset \mathbb{R}^2$ be a compact search domain, $f://Omega//to[0,1]$ a bounded objective and $r://Omega//to[0,1]$ a constraint-violation measure with feasibility threshold $\rho$. A solver is a policy that, after a budget of $N$ objective evaluations, returns an estimate $\hat{x}$ of
+Let $\Omega \subset \mathbb{R}^2$ be a compact search domain, $f:\Omega\to[0,1]$ a bounded objective and $r:\Omega\to[0,1]$ a constraint-violation measure with feasibility threshold $\rho$. A solver is a policy that, after a budget of $N$ objective evaluations, returns an estimate $\hat{x}$ of
 $$x^\ast = \arg\max_{x\in\Omega} f(x) \;\; \text{s.t.} \;\; r(x) \le \rho ,$$
 and along the way incurs the violation count $V = |\{t \le N : r(x_t) > \rho\}|$.
 
@@ -78,6 +78,8 @@ The safety layer is lines 5 and 8-9: a candidate that cannot be projected is nev
 
 A single offline HTML file, no dependencies, no build step. One deterministic solver pre-computes the timeline; every view reads the same frame through a pure render function. A seeded PRNG plus URL state parameters make a run reproducible; a tick scrub bar makes every intermediate state inspectable.
 
+**TABLE I.** Reference implementation defaults.
+
 | Parameter | Value | Meaning |
 |---|---|---|
 | Ticks | 1100 | pre-computed timeline |
@@ -94,37 +96,41 @@ Three implementation details decide whether a solution is found at all: the loca
 
 ### 5.1 Setup
 
-Four operating profiles vary exploration coefficient, risk scaling, terrain complexity and stress (hazard growth). Table I lists them; complexity adds distractor peaks, stress inflates every hazard radius by the same factor.
+Four operating profiles vary exploration coefficient, risk scaling, terrain complexity and stress (hazard growth). Table II lists them; complexity adds distractor peaks, stress inflates every hazard radius by the same factor.
+
+**TABLE II.** Operating profiles. Complexity adds distractor peaks; stress inflates every hazard radius by the same factor.
 
 | Profile | $\lambda_e$ | risk | cmplx | stress | peaks | hzrd |
 |---|---|---|---|---|---|---|
-| P1 mild | 0.35 | 0.25 | 0.20 | 0.00 | 3 | 3 |
-| P2 baseline | 0.35 | 0.55 | 0.50 | 0.00 | 4 | 3 |
-| P3 high-risk | 0.30 | 0.68 | 0.62 | 0.30 | 4 | 4 |
-| P4 extreme | 0.15 | 0.90 | 0.85 | 0.90 | 5 | 4 |
+| P1 | 0.35 | 0.25 | 0.20 | 0.00 | 3 | 3 |
+| P2 | 0.35 | 0.55 | 0.50 | 0.00 | 4 | 3 |
+| P3 | 0.30 | 0.68 | 0.62 | 0.30 | 4 | 4 |
+| P4 | 0.15 | 0.90 | 0.85 | 0.90 | 5 | 4 |
 
  Every method runs on the **same objective field**, under the **same feasibility gate** $\mathrm{risk}(x,z) < 0.35$ — the same test used to compute the reference optimum $f^\ast$ — and with the **same evaluation budget**: 39,911 objective evaluations per run, exactly what the LRLS solver consumes in 1,100 ticks with 12 agents. Each configuration is repeated over **five seeds**; we report mean ± s.d.
 
-**Baselines.** *RS*: uniform random search, keeping the best feasible sample. *SA*: simulated annealing with a fixed geometric schedule $T_0{=}0.30 \to T_1{=}10^{-3}$, Gaussian proposal and Metropolis acceptance — the standard fixed-temperature control. *COA-T*: a temperature-gated two-phase switch in the style of COA — large jumps while $T > T^\ast$, local steps below — i.e. the mechanism this work replaces with an agent. *SP-EA*: a single population of 12 agents with a globally annealed entropy coefficient, no role separation and no scheduler; an ablation of the architectural claim.
+**Baselines.** *RS*: uniform random search, keeping the best feasible sample. *SA*: simulated annealing [3] with a fixed geometric schedule $T_0{=}0.30 \to T_1{=}10^{-3}$, Gaussian proposal and Metropolis acceptance — the standard fixed-temperature control. *COA-T*: a temperature-gated two-phase switch in the style of COA — large jumps while $T > T^\ast$, local steps below — i.e. the mechanism this work replaces with an agent. *SP-EA*: a single population of 12 agents with a globally annealed entropy coefficient, no role separation and no scheduler; an ablation of the architectural claim.
 
 **Metrics.** (a) evaluations to reach 99% of $f^\ast$; (b) constraint violations accumulated *before* that threshold. The second metric is the one a safety layer is supposed to move, and it is not implied by the first.
 
 ### 5.2 Results
 
-| Profile | Metric | RS | SP-EA | SA | COA-T | **LRLS** |
+**TABLE III.** Budget-matched results, 5 seeds. ev = evaluations to reach 99% of $f^\ast$; vio = violations accumulated before that threshold.
+
+| P | Metric | RS | SP-EA | SA | COA-T | **LRLS** |
 |---|---|---|---|---|---|---|
-| P1 mild | eval@99% | 193 | **111** | 1115† | 1987 | 327 |
-| | viol@99% | 16 | 16 | 94 | 456 | **0** |
-| P2 baseline | eval@99% | 193 | 255 | 1005† | 494 | 323 |
-| | viol@99% | 29 | 44 | 80 | 134 | **0** |
-| P3 high-risk | eval@99% | 193 | 255 | 1169† | 494 | 302 |
-| | viol@99% | 42 | 56 | 128 | 148 | **0** |
-| P4 extreme | eval@99% | 193 | 179 | 1260† | 374 | 248 |
-| | viol@99% | 69 | 49 | 265 | 135 | **0** |
+| P1 | ev | 193 | **111** | 1115† | 1987 | 327 |
+| | vio | 16 | 16 | 94 | 456 | **0** |
+| P2 | ev | 193 | 255 | 1005† | 494 | 323 |
+| | vio | 29 | 44 | 80 | 134 | **0** |
+| P3 | ev | 193 | 255 | 1169† | 494 | 302 |
+| | vio | 42 | 56 | 128 | 148 | **0** |
+| P4 | ev | 193 | 179 | 1260† | 374 | 248 |
+| | vio | 69 | 49 | 265 | 135 | **0** |
 
 † SA reached the threshold in only 3–4 of 5 seeds.
 
-![**Fig. 1.** Budget-matched comparison over five seeds. (a) Evaluations to reach 99% of the optimum (log scale). (b) Constraint violations accumulated before that threshold. LRLS is not the fastest method; it is the only one that reaches the threshold with zero violations.](assets/fig-baselines.png)
+![**Fig. 1.** Budget-matched comparison over five seeds (mean ± s.d.), P2 baseline and P4 extreme. (a) Evaluations to reach 99% of the optimum, log scale. (b) Violations accumulated before that threshold. LRLS is not the fastest method; it is the only one that reaches the threshold with zero violations.](assets/fig-baselines-cec.png)
 
 **Negative result on sample efficiency.** Random search and the single-pool ablation reach 99% in 111–255 evaluations — 1.3–2.9× faster than LRLS (248–327). We do not claim otherwise. On a 22×22 surface with a smooth objective, uniform sampling is a strong baseline, and any method that spends budget on verification pays for it.
 
@@ -132,17 +138,18 @@ Four operating profiles vary exploration coefficient, risk scaling, terrain comp
 
 **The comparison the specification was designed for.** COA-style temperature gating is slower *and* less safe than LRLS in all four profiles (374–1987 evaluations, 135–456 violations), and it is the most sensitive to profile difficulty: its evaluation count swings by 5× across profiles, while LRLS stays within 1.3×. Simulated annealing is dominated on both axes and fails to reach the threshold in one or two of five seeds.
 
-**What the scheduler actually does.** Fig. 3 shows the allocation trace. The scheduler does not sit at a fixed split: exploratory capacity moves between 4 and 7 agents and verification capacity between 1 and 4 as candidates accumulate and are consumed. In P4 the refiner count stays at 1 for the whole run — not by choice but because the risk gate refuses to assign the discovered regions, which is the safety layer overriding the scheduler. That is the intended failure mode: under extreme risk the system degrades to exploration-only rather than sending refiners into hazards.
+**What the scheduler actually does.** Fig. 2 shows the allocation trace. The scheduler does not sit at a fixed split: exploratory capacity moves between 4 and 7 agents and verification capacity between 1 and 4 as candidates accumulate and are consumed. In P4 the refiner count stays at 1 for the whole run — not by choice but because the risk gate refuses to assign the discovered regions, which is the safety layer overriding the scheduler. That is the intended failure mode: under extreme risk the system degrades to exploration-only rather than sending refiners into hazards.
 
-![**Fig. 3.** Scheduler allocation over a run. Stacked area: explorers $N_C$ and refiners $N_B$ per tick. (a) P2 baseline: verification capacity rises to 4 as candidates accumulate. (b) P4 extreme: the risk gate blocks assignment, so $N_B$ stays at 1 and the run degrades to exploration-only.](assets/fig-scheduler.png)
+![**Fig. 2.** Refiner capacity over a run. In P1-P3 the scheduler moves between 1 and 4 refiners as candidates accumulate and are consumed; in P4 the capacity is pinned at 1 for the entire run because the risk gate refuses to assign the discovered regions, so the system degrades to exploration-only instead of sending refiners into hazards.](assets/fig-scheduler-cec.png)
 
 **Mechanism.** Explorers may sample hazard zones — biasing the exploration signal would defeat its purpose — but a candidate becomes a solution only after the refiner's bounded projection succeeds, and the scheduler never assigns high-risk regions to refiners. The scheduler's contribution is therefore not "smarter search" but *sequencing*: it decides when verification capacity is worth more than discovery capacity.
 
-![**Fig. 2.** Objective field and agent footprint at $t=1100$ (P2). (a) Synthetic field $f(x,z)$ with hard-constraint hazard zones (hatched); the star is the optimum, circles are sub-optima and decoys. (b) Explorer samples cover the domain; refiner samples concentrate on candidates; squares are consensus-verified solutions.](assets/fig-field.png)
 
-**Per-seed detail.** Table III gives every seed for the hardest profile (P4), as (evaluations to reach 99% of the optimum, violations before that point). The zero-violation property of LRLS is not an average over lucky seeds: it holds in all five, while the spread across seeds for the baselines is large enough that their means should be read as indicative.
+**Per-seed detail.** Table IV gives every seed for the hardest profile (P4), as (evaluations to reach 99% of the optimum, violations before that point). The zero-violation property of LRLS is not an average over lucky seeds: it holds in all five, while the spread across seeds for the baselines is large enough that their means should be read as indicative.
 
-| Method | s1 (eval, viol) | s2 | s3 | s4 | s5 |
+**TABLE IV.** Per-seed detail for P4, as (evaluations to 99%, violations before it).
+
+| Method | s1 (ev, vio) | s2 | s3 | s4 | s5 |
 |---|---|---|---|---|---|
 | RS | (209, 71) | (224, 87) | (74, 30) | (95, 34) | (362, 124) |
 | SP-EA | (84, 28) | (55, 19) | (131, 31) | (274, 81) | (353, 88) |
@@ -179,3 +186,21 @@ A schedule is a scalar; a scheduler is a decision. LRLS makes the switching deci
 The next step is the one the specification was built to enable: replace the rule-based warm start with a learned scheduler and test whether it beats fixed temperature and entropy annealing. That is a falsifiable claim, and it is not made here.
 
 **Reproducibility.** Specification, simulator, figures and all experiment code: `github.com/clawgeek/lrls-paper`. Archived at DOI `10.5281/zenodo.23984055`. Preprint: Preprints.org 242857.
+
+## References
+
+[1] H. Jia, H. Rao, C. Wen, and S. Mirjalili, "Crayfish Optimization Algorithm," *Artificial Intelligence Review*, vol. 56, no. Suppl 2, pp. 1919-1979, 2023, doi: 10.1007/s10462-023-10520-4.
+
+[2] L. P. Kaelbling, M. L. Littman, and A. W. Moore, "Reinforcement Learning: A Survey," *Journal of Artificial Intelligence Research*, vol. 4, pp. 237-285, 1996.
+
+[3] S. Kirkpatrick, C. D. Gelatt, and M. P. Vecchi, "Optimization by Simulated Annealing," *Science*, vol. 220, no. 4598, pp. 671-680, 1983.
+
+[4] T. Haarnoja, A. Zhou, P. Abbeel, and S. Levine, "Soft Actor-Critic: Off-Policy Maximum Entropy Deep Reinforcement Learning with a Stochastic Actor," in *Proc. ICML*, 2018.
+
+[5] J. Schulman, F. Wolski, P. Dhariwal, A. Radford, and O. Klimov, "Proximal Policy Optimization Algorithms," arXiv:1707.06347, 2017.
+
+[6] C. Yu et al., "The Surprising Effectiveness of PPO in Cooperative Multi-Agent Games," in *Proc. NeurIPS*, 2022.
+
+[7] J. Sang, "LRLS-v1.1: A Specification and Reference Simulation for Dual-Agent Exploration-Exploitation under Hard Constraints," preprint, 2026, doi: 10.5281/zenodo.23984055.
+
+[8] J. Sang, "Lobster Dual-Agent RL - Interactive Reference Simulator," single-file HTML, 2026. [Online]. Available: https://github.com/clawgeek/lrls-paper
