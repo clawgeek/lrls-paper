@@ -1,0 +1,38 @@
+To: jakob.foerster@eng.ox.ac.uk
+From: Jason Sang <sangjiexun@gmail.com>
+Subject: arXiv endorsement request (cs.LG) - one 30-second step
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Unsent: 1
+
+Dear Professor Foerster,
+
+I am an independent researcher working on constrained exploration-exploitation in
+multi-agent optimisation. I am writing to ask whether you would endorse my first
+cs.LG submission to arXiv. This is an account requirement for new submitters, not
+a request for you to review or vouch for the work.
+
+Your zero-shot coordination work is why I framed the coordination side of this
+problem as role separation rather than as a schedule. The paper moves the
+exploration-exploitation switch out of a scalar temperature into two
+heterogeneous populations plus a scheduler, ships a dependency-free reference
+implementation, and reports a five-seed, budget-matched comparison against four
+baselines. The headline result is unflattering to my own method: random search
+and a single-pool ablation reach 99% of the optimum 1.3-2.9x faster than mine.
+What role separation buys is constraint safety on the path - zero hazard-zone
+evaluations before the quality threshold in every seed, versus 16-456 for every
+baseline.
+
+Preprint: doi.org/10.5281/zenodo.23984055
+Code and data: github.com/clawgeek/lrls-paper
+
+If you are willing, my endorsement code is KDOBWQ at
+https://arxiv.org/auth/endorse - it takes about thirty seconds. If not, that is
+entirely fine; I will not follow up.
+
+Best regards,
+Jason Sang (Sang Jiexun)
+Independent Researcher, China
+sangjiexun@gmail.com
+
