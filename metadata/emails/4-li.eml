@@ -1,0 +1,38 @@
+To: k.li@exeter.ac.uk
+From: Jason Sang <sangjiexun@gmail.com>
+Subject: arXiv endorsement request (cs.LG) - one 30-second step
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Unsent: 1
+
+Dear Professor Li,
+
+I am an independent researcher working on constrained exploration-exploitation in
+metaheuristics. I am writing to ask whether you would endorse my first cs.LG
+submission to arXiv. This is an account requirement for new submitters, not a
+request for you to review the work.
+
+Your MOEA/D survey and the constraint-handling material in it shaped how I set up
+the feasibility gate in this work. The paper compares a role-separated scheme
+against random search, simulated annealing, a single-pool ablation and a
+COA-style temperature gate, all under the same evaluation budget and the same
+feasibility threshold, five seeds per setting. The headline result is
+unflattering to my own method: random search and the single-pool ablation reach
+99% of the optimum 1.3-2.9x faster. What the role separation buys is constraint
+safety on the path - zero hazard-zone evaluations before the threshold in every
+seed, versus 16-456 for every baseline, and the COA-style gate is worse on both
+axes.
+
+Preprint: doi.org/10.5281/zenodo.23984055
+Code and data: github.com/clawgeek/lrls-paper
+
+If you are willing, my endorsement code is KDOBWQ at
+https://arxiv.org/auth/endorse - it takes about thirty seconds. If not, that is
+entirely fine; I will not follow up.
+
+Best regards,
+Jason Sang (Sang Jiexun)
+Independent Researcher, China
+sangjiexun@gmail.com
+
