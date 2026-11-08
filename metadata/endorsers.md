@@ -95,3 +95,69 @@ sukicao2、thevikitalks、SandAI_HQ、HoodieFade_、anxuanng、hongseyanqiu…�
 - X Chat 需 4 位 passcode 解锁；发送用 **Ctrl+Enter**（点纸飞机按钮在本机会静默失败）。
 - 首条私信若含长链接会被吞，先发一句短文本建立会话，再补细节。
 
+
+---
+
+## 邮件版背书请求（2026-11-08 复核后新增）
+
+X 私信 2 天零回复（@j_foerst、@ryanxhr 均未读/未回）。学术场景下邮件比 DM 正式得多，
+且多数作者在论文 PDF 首页就留了通讯邮箱，比猜 X 账号可靠。
+
+**获取收件邮箱的办法**：打开对方任一 arXiv 摘要页 → 点 "PDF" → PDF 首页脚注/页眉通常有
+`name@institution.edu`；或用 `https://arxiv.org/a/<author_id>` 页面。
+
+**题目**：arXiv endorsement request for cs.LG (code KDOBWQ)
+
+**正文**（英文，可直接复制；把 [NAME] / [PAPER] 换成对方工作）：
+
+```
+Dear Professor [NAME],
+
+I am an independent researcher working on constrained exploration-exploitation in
+multi-agent optimisation. I am writing to ask whether you would be willing to endorse
+my arXiv submission to cs.LG.
+
+The work: LRLS separates the exploration-exploitation trade-off into two heterogeneous
+agent populations (a high-entropy explorer, a constraint-aware refiner) plus a scheduler,
+instead of a scalar temperature or entropy schedule. It ships a dependency-free
+deterministic reference implementation and a five-seed, budget-matched comparison against
+four baselines. The honest headline result is a negative one for speed: random search and
+a single-pool ablation reach 99% of the optimum 1.3-2.9x faster. What role separation buys
+is constraint safety on the path - zero hazard-zone evaluations before the quality
+threshold in every seed, versus 16-456 for every baseline, and a COA-style temperature
+gate is worse on both axes.
+
+It is already public and citable:
+  preprint   doi.org/10.5281/zenodo.23984055
+  code+data  github.com/clawgeek/lrls-paper
+
+I am asking specifically because arXiv requires an endorsement for a first submission to
+cs.LG - this is an account requirement, not a request for you to review or vouch for the
+work's quality. If you are able to help, entering my endorsement code at
+https://arxiv.org/auth/endorse takes about thirty seconds:
+
+  endorsement code: KDOBWQ
+
+If you would rather not, that is completely fine - I understand these requests are
+frequent and I will not follow up.
+
+Thank you for your time, and for [PAPER] which shaped how I think about the
+exploration side of this problem.
+
+Best regards,
+Jason Sang (Sang Jiexun)
+Independent Researcher, China
+sangjiexun@gmail.com | doi.org/10.5281/zenodo.23984055
+```
+
+**发送对象优先级**（资质已用 arXiv API 核过：5 年内 cs 论文数 / 最新投稿日）
+
+| 优先 | 学者 | 5 年 cs | 最新 | 邮箱获取 |
+|---|---|---|---|---|
+| 1 | Jakob Foerster (Oxford) | 117 | 2026-11-04 | 论文 PDF 首页 |
+| 2 | Haoran Xu (UT Austin) | 70 | 2026-11-02 | 论文 PDF 首页 |
+| 3 | Amy Zhang (UT Austin) | 79 | 2026-10-19 | 论文 PDF 首页 |
+| 4 | Ke Li (Exeter) | 94 | 2026-11-03 | 论文 PDF 首页 |
+| 5 | Somayeh Sojoudi (Berkeley) | 42 | 2026-10-13 | 系主页 |
+
+一次最多发 3-5 封，**不要群发**（收件人互相认识时群发是负分）。
