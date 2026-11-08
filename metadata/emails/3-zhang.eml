@@ -1,0 +1,37 @@
+To: amy.zhang@austin.utexas.edu
+From: Jason Sang <sangjiexun@gmail.com>
+Subject: arXiv endorsement request (cs.LG) - one 30-second step
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Unsent: 1
+
+Dear Professor Zhang,
+
+I am an independent researcher working on constrained exploration-exploitation.
+I am writing to ask whether you would endorse my first cs.LG submission to arXiv.
+This is an account requirement for new submitters, not a request for you to
+review or vouch for the work.
+
+Your work on sample efficiency and generalisation is the yardstick I used to
+report my own result honestly. The paper moves the exploration-exploitation
+switch out of a scalar schedule into two heterogeneous populations plus a
+scheduler, and reports a five-seed, budget-matched comparison against four
+baselines. The headline finding is a negative one for speed: random search and a
+single-pool ablation reach 99% of the optimum 1.3-2.9x faster than mine. What
+role separation buys is constraint safety on the path - zero hazard-zone
+evaluations before the quality threshold in every seed, versus 16-456 for every
+baseline. The paper argues for a property, not a speed-up.
+
+Preprint: doi.org/10.5281/zenodo.23984055
+Code and data: github.com/clawgeek/lrls-paper
+
+If you are willing, my endorsement code is KDOBWQ at
+https://arxiv.org/auth/endorse - it takes about thirty seconds. If not, that is
+entirely fine; I will not follow up.
+
+Best regards,
+Jason Sang (Sang Jiexun)
+Independent Researcher, China
+sangjiexun@gmail.com
+
