@@ -151,3 +151,29 @@ main.tex 同步（新增 5.2 节 + Figure 4 + 表）、PDF 重建为 13 页 4 �
 作者：Jason Sang (Sang Jiexun) / Independent Researcher / sangjeixun@gmail.com。
 
 **待确认**：邮箱拼写 `sangjeixun@` vs 既有账号 `sangjiexun@`（i/e 顺序不同），提交前需核对。
+
+---
+
+## 🎉 Preprints.org 已上线（2026-11-09）
+
+| 项 | 内容 |
+|---|---|
+| 标题 | LRLS-v1.1: A Specification and Reference Simulation for Dual-Agent Exploration–Exploitation Under Hard Constraints |
+| **DOI** | **10.20944/preprints202611.0897.v1** |
+| 链接 | https://www.preprints.org/manuscript/202611.0897/v1 |
+| 状态 | Online（CC BY 4.0，作者 Jason Sang，独立研究者） |
+| 编辑 | Wenqian Li, Preprints.org Editorial Office |
+
+**注意版本不一致（需要处理）**：线上 v1 是我们 11-06 上传的 **11 页旧版**，
+当时还没有跑基线实验。本地与 GitHub 上的 `paper/lrls-v1.1-en.pdf` 已是 **13 页含 5-seed 基线对比**的版本。
+线上摘要里仍写着 "illustrative single-run behaviour … No baseline comparison"，
+与现在这篇论文的实际贡献不符 → **建议提交 v2**（Preprints.org 支持版本化，v2 得到 .v2 后缀，
+DOI 后缀不同但同一记录，引用时指向最新版本）。
+
+**已同步更新**：`CITATION.cff`（含 Preprints DOI + Zenodo DOI）、论文网页顶栏
+（"PDF (13 pp)"、"Preprints DOI"）、`site/lrls-v1.1-en.pdf`。
+
+**忽略的邀稿**：上线后收到两封掠夺性期刊邮件——
+*Journal of Advanced Artificial Intelligence, Engineering and Technology*（ISSN 3139-4256）
+与 *JSM Computer Science and Engineering*（mark.richardson.editor@gmail.com），
+均为 APC 钓鱼，未回复。
