@@ -1,6 +1,6 @@
 # LRLS: Role-Separated Exploration and Exploitation with a Scheduling Agent for Constrained Optimisation
 
-**Jason Sang (Sang Jiexun)** — Independent Researcher — sangjeixun@gmail.com
+**Anonymous Authors**
 
 ## Abstract
 
@@ -185,7 +185,7 @@ A schedule is a scalar; a scheduler is a decision. LRLS makes the switching deci
 
 The next step is the one the specification was built to enable: replace the rule-based warm start with a learned scheduler and test whether it beats fixed temperature and entropy annealing. That is a falsifiable claim, and it is not made here.
 
-**Reproducibility.** Specification, simulator, figures and all experiment code: `github.com/clawgeek/lrls-paper`. Archived at DOI `10.5281/zenodo.23984055`. Preprint: Preprints.org 242857.
+**Reproducibility.** Specification, simulator, figures and all experiment code are archived at DOI `10.5281/zenodo.23984055` and are released publicly on acceptance.
 
 ## References
 
@@ -201,6 +201,6 @@ The next step is the one the specification was built to enable: replace the rule
 
 [6] C. Yu et al., "The Surprising Effectiveness of PPO in Cooperative Multi-Agent Games," in *Proc. NeurIPS*, 2022.
 
-[7] J. Sang, "LRLS-v1.1: A Specification and Reference Simulation for Dual-Agent Exploration-Exploitation under Hard Constraints," preprint, 2026, doi: 10.5281/zenodo.23984055.
+[7] "LRLS-v1.1: A Specification and Reference Simulation for Dual-Agent Exploration-Exploitation under Hard Constraints," preprint, 2026, doi: 10.5281/zenodo.23984055.
 
-[8] J. Sang, "Lobster Dual-Agent RL - Interactive Reference Simulator," single-file HTML, 2026. [Online]. Available: https://github.com/clawgeek/lrls-paper
+[8] "Lobster Dual-Agent RL - Interactive Reference Simulator," single-file HTML reference implementation accompanying [7], 2026.
