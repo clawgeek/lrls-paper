@@ -19,11 +19,12 @@ OUT_HTML = os.path.join(ROOT, "paper", "cec", "cec-v1.html")
 OUT_PDF = os.path.join(ROOT, "paper", "cec", "cec-v1.pdf")
 
 CSS = """
-/* IEEE conference template: US Letter, top .75in, bottom 1in, sides .625in */
-@page { size: Letter; margin: 0.75in 0.625in 1in 0.625in; }
+/* IEEE conference template: A4 (210x297mm required by IEEE CEC 2027),
+   top .75in, bottom 1in, sides .625in */
+@page { size: A4; margin: 0.75in 0.625in 1in 0.625in; }
 * { box-sizing: border-box; }
 body { font-family: "Times New Roman", "Nimbus Roman", Georgia, serif;
-       font-size: 9.5pt; line-height: 1.23; color: #000; margin: 0;
+       font-size: 9.9pt; line-height: 1.26; color: #000; margin: 0;
        text-align: justify; hyphens: auto; }
 .cols { column-count: 2; column-gap: 0.25in; column-fill: balance;
         orphans: 2; widows: 2; }
@@ -197,8 +198,8 @@ def main():
     doc = ("<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\">"
            "<title>LRLS - IEEE CEC 2027 submission</title><style>%s%s</style>"
            "</head><body>%s<div class=\"cols\">%s</div>"
-           "<div class=\"foot\">Preprint v1.1 - IEEE CEC 2027 submission draft - "
-           "code and data: github.com/clawgeek/lrls-paper</div>"
+           "<div class=\"foot\">Anonymous submission to IEEE CEC 2027 "
+           "(Short Paper track) - manuscript and code archived at the DOI cited in [7]</div>"
            "</body></html>") % (CSS, ABSTRACT_CSS, block, rest)
     open(OUT_HTML, "w", encoding="utf-8").write(doc)
     print("HTML", OUT_HTML, os.path.getsize(OUT_HTML), "bytes")
