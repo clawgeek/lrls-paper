@@ -1,0 +1,38 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite the Preprints.org version (peer-reviewed venue pending)."
+title: "LRLS-v1.1: A Specification and Reference Simulation for Dual-Agent Exploration-Exploitation Under Hard Constraints"
+abstract: >-
+  LRLS role-separates the exploration-exploitation trade-off into two heterogeneous
+  agent populations plus a scheduler: a high-entropy explorer proposes candidate
+  habitats, a constraint-aware refiner promotes them into verified feasible solutions
+  through bounded projection, and a scheduler allocates budget from global state. The
+  work ships an executable specification, a dependency-free deterministic reference
+  implementation, and a five-seed budget-matched comparison against four baselines.
+  The headline finding is a negative one for speed - random search and a single-pool
+  ablation reach 99% of the optimum 1.3-2.9x faster - while role separation reaches
+  the quality threshold with zero hazard-zone evaluations in every seed.
+authors:
+  - family-names: Sang
+    given-names: Jason
+    affiliation: Independent Researcher
+    country: CN
+type: preprint
+license: CC-BY-4.0
+doi: 10.20944/preprints202611.0897.v1
+url: https://www.preprints.org/manuscript/202611.0897/v1
+repository-code: https://github.com/clawgeek/lrls-paper
+date-released: 2026-11-09
+keywords:
+  - constrained optimisation
+  - exploration-exploitation
+  - multi-agent systems
+  - reinforcement learning specification
+  - constraint handling
+  - reproducibility
+identifiers:
+  - type: doi
+    value: 10.20944/preprints202611.0897.v1
+    description: Preprints.org (v1, posted 2026-11-09)
+  - type: doi
+    value: 10.5281/zenodo.23984055
+    description: Zenodo deposit (full text, LaTeX source, reference simulator)
