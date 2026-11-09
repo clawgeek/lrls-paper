@@ -177,3 +177,47 @@ DOI 后缀不同但同一记录，引用时指向最新版本）。
 *Journal of Advanced Artificial Intelligence, Engineering and Technology*（ISSN 3139-4256）
 与 *JSM Computer Science and Engineering*（mark.richardson.editor@gmail.com），
 均为 APC 钓鱼，未回复。
+
+---
+
+## EDAS 投稿进展（2026-11-10 凌晨）
+
+**Paper #57 / ID 1571382688**，CEC 2027 Companion → Short Paper Submissions。
+标题、摘要（235 词）、主题（OPTIMIZATION → Constraint handling，**该会场只允许选 1 个主题**）、
+作者（Jason Sang / Myaideal Technology (MAD) / China）、两个必选声明框——全部完成，状态 **Pending (no manuscript)**。
+
+### 上传 PDF 被拒，两个硬性原因（都已核实官方要求）
+
+1. **CEC 2027 是双盲评审**（double-anonymous）。
+   EDAS 报错：`author name: Doubleblind conference, but 1 author name is visible on the first page: Sang (2648589)`
+   官方原文（initial-paper-submission-instructions）：*"Each paper should not reveal author's identities
+   (double-anonymous review process)"*，并要求 LaTeX 用 `\author{\IEEEauthorblockN{Anonymous Authors}}`。
+   → **PDF 首页必须去掉姓名/单位**，正文自引也要改成第三人称。
+
+2. **PDF 未经 IEEE PDF eXpress 认证**。
+   报错：`The PDF file has not been certified by PDF eXpress, created by 'HeadlessChrome/156.0.0.0' instead`
+   → 我们的 HTML→PDF 管线生成的 PDF 元数据里没有 PDF eXpress 标记，必须过 https://ieee-pdf-express.org
+   （需要 CEC 2027 的 Conference ID）重新生成认证版。
+
+3. **额外发现：纸张尺寸不合规**。EDAS 识别出 `letter-size pages (8.5x11 in)`，
+   而 CEC 2027 要求 **A4 (210×297mm)**。短论文页数 4 页（含参考文献）符合要求。
+
+### 已完成（2026-11-10 01:55）
+
+- [x] `tools/build_cec.py` 的 `@page` 从 `Letter` 改为 `A4`（实测 209.9 × 297.0 mm）
+- [x] 首页作者块 → `Anonymous Authors`；正文自引无第一人称身份表述
+- [x] 参考文献 [7][8] 去掉作者名与 GitHub 句柄，保留 Zenodo DOI
+- [x] 可复现性声明去掉 `github.com/clawgeek/...`，改为 "archived at DOI ... released on acceptance"
+- [x] 页脚 `github.com/clawgeek/lrls-paper` → "Anonymous submission to IEEE CEC 2027 (Short Paper track)"
+- [x] 正文字号 9.5pt → 9.9pt（A4 下第 4 页填充率从 67% 提升到 88%）
+- [x] 全文身份泄漏检查：Sang / gmail / clawgeek / Myaideal / Jiexun → **NONE**
+- [x] PDF 元数据 author 为空，无泄漏
+- [x] 仍为 4 页（含参考文献），A4
+
+### 仅剩一步
+
+- [ ] **PDF eXpress 认证**：需要 CEC 2027 的 Conference ID。CFP 与 initial-submission 页面都没写，
+  已起草向 conference manager（Liz Davis）索取的邮件：`metadata/email-cec-pdfexpress.md`
+- [ ] 拿到认证 PDF 后重传 `uploadPaper.php?m=1571382688`
+
+构建命令：`python tools/build_cec.py`（输出 `paper/cec/cec-v1.pdf`）
